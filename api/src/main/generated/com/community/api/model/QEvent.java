@@ -21,13 +21,15 @@ public class QEvent extends EntityPathBase<Event> {
 
     public final StringPath content = createString("content");
 
-    public final StringPath description = createString("description");
-
-    public final StringPath filePath = createString("filePath");
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final StringPath period = createString("period");
+
+    public final BooleanPath Proceeding = createBoolean("Proceeding");
+
     public final StringPath title = createString("title");
+
+    public final NumberPath<Long> userId = createNumber("userId", Long.class);
 
     public QEvent(String variable) {
         super(Event.class, forVariable(variable));

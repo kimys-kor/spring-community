@@ -42,37 +42,37 @@ public class UserController {
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
-//    @PostMapping(value = "/login")
-//    public Response<Object> login(
-//            @RequestBody LoginRequestDto loginRequestDto,
-//            HttpServletResponse response
-//    ) {
-//        UsernamePasswordAuthenticationToken authenticationToken =
-//                new UsernamePasswordAuthenticationToken(
-//                        loginRequestDto.getEmail(),
-//                        loginRequestDto.getPassword());
-//
-//        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-//        PrincipalDetails principalDetailis = (PrincipalDetails) authenticate.getPrincipal();
-//
-//        // access token 헤더 추가
-//        String jwtToken = jwtTokenProvider.generateToken(principalDetailis.getUser().getId(), principalDetailis.getUser().getUsername());
-//        response.addHeader(jwtProperties.headerString(), "Bearer "+jwtToken);
-//
-//        // refresh token 쿠키 추가
-//        String refreshToken = stringSecureRandom.next(20);
-//        Cookie cookie = new Cookie("refresh_token", refreshToken);
-//        cookie.setMaxAge(2_592_000);
-//        cookie.setDomain("");
-//        cookie.setPath("/");
-//        cookie.setHttpOnly(true);
-//        response.addCookie(cookie);
-//
-//
-//        refreshTokenService.save(principalDetailis.getUser().getUsername(), refreshToken);
-//
-//        return new Response(ResultCode.DATA_NORMAL_PROCESSING);
-//    }
+    @PostMapping(value = "/login")
+    public Response<Object> login(
+            @RequestBody LoginRequestDto loginRequestDto,
+            HttpServletResponse response
+    ) {
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(
+                        loginRequestDto.getEmail(),
+                        loginRequestDto.getPassword());
+
+        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+        PrincipalDetails principalDetailis = (PrincipalDetails) authenticate.getPrincipal();
+
+        // access token 헤더 추가
+        String jwtToken = jwtTokenProvider.generateToken(principalDetailis.getUser().getId(), principalDetailis.getUser().getUsername());
+        response.addHeader(jwtProperties.headerString(), "Bearer "+jwtToken);
+
+        // refresh token 쿠키 추가
+        String refreshToken = stringSecureRandom.next(20);
+        Cookie cookie = new Cookie("refresh_token", refreshToken);
+        cookie.setMaxAge(2_592_000);
+        cookie.setDomain("");
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+
+
+        refreshTokenService.save(principalDetailis.getUser().getUsername(), refreshToken);
+
+        return new Response(ResultCode.DATA_NORMAL_PROCESSING);
+    }
 
     @PostMapping(value = "/join")
     public Response<Object> join(

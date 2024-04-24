@@ -15,10 +15,10 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String filePath;
-
+    private Long userId;
     private String title;
     private String content;
+    private String period;
+    private boolean Proceeding;
 
-    private String description;
 }

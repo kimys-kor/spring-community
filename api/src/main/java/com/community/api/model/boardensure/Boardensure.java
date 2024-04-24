@@ -1,10 +1,18 @@
 package com.community.api.model.boardensure;
 
 import com.community.api.model.base.BaseTime;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.*;
 
+@Getter
+@Setter
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Boardensure extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +27,6 @@ public class Boardensure extends BaseTime {
     private String content;
     private int hit;
     private int hate;
-    private int like;
+    private int likes;
     private String imgPath;
 }

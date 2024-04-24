@@ -27,6 +27,6 @@ public class Boardcommunity extends BaseTime {
     private String content;
     private int hit;
     private int hate;
-    private int like;
+    private int likes;
     private String imgPath;
 }

@@ -36,7 +36,7 @@ public class QBoardcommunity extends EntityPathBase<Boardcommunity> {
 
     public final StringPath imgPath = createString("imgPath");
 
-    public final NumberPath<Integer> like = createNumber("like", Integer.class);
+    public final NumberPath<Integer> likes = createNumber("likes", Integer.class);
 
     public final BooleanPath notification = createBoolean("notification");
 

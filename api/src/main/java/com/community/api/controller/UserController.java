@@ -76,8 +76,13 @@ public class UserController {
 
     @PostMapping(value = "/join")
     public Response<Object> join(
-            UserDto userDto
+            @RequestBody UserDto userDto
     ) throws CustomException {
+        System.out.println(userDto.getPassword());
+        System.out.println(userDto.getUsername());
+        System.out.println(userDto.getNickname());
+        System.out.println(userDto.getPhoneNum());
+
         userService.join(userDto);
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }

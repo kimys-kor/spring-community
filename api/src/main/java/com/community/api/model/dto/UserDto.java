@@ -10,4 +10,6 @@ public class UserDto {
 
     private String phoneNum;
     private String nickname;
+
+//    private String fulllName;
 }

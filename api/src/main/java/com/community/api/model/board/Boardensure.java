@@ -1,4 +1,4 @@
-package com.community.api.model.boardad;
+package com.community.api.model.board;
 
 import com.community.api.model.base.BaseTime;
 import jakarta.persistence.Entity;
@@ -13,16 +13,17 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Boardad extends BaseTime {
+public class Boardensure extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //    1꽁머니 2토토 3기타 4구인구직
+    //    1보증게시판 2먹튀피해게시판
     private int boardType;
 
     private boolean notification;
     private Long userId;
+    private String userIp;
     private String title;
     private String content;
     private int hit;

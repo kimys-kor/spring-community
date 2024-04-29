@@ -32,6 +32,11 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
 
+    @GetMapping(value = "/test")
+    public Response<Object> test() {
+        return new Response(ResultCode.DATA_NORMAL_PROCESSING);
+    }
+
     @GetMapping(value = "/refresh")
     public Response<Object> refresh (
             HttpServletRequest request,
@@ -49,7 +54,7 @@ public class UserController {
     ) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(
-                        loginRequestDto.getEmail(),
+                        loginRequestDto.getUsername(),
                         loginRequestDto.getPassword());
 
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);

@@ -20,7 +20,7 @@ public class PrincipalDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         System.out.println("loaduser실행");
-        User user = userService.findByEmail(email);
+        User user = userService.findByUsername(email);
         
         // 마지막로그인 업데이트
         LocalDateTime currentDateTime = LocalDateTime.now();

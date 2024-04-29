@@ -1,4 +1,4 @@
-package com.community.api.model.boardcommunity;
+package com.community.api.model.board;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -10,23 +10,18 @@ import com.querydsl.core.types.Path;
 
 
 /**
- * QBoardcommunity is a Querydsl query type for Boardcommunity
+ * QBoardhide is a Querydsl query type for Boardhide
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QBoardcommunity extends EntityPathBase<Boardcommunity> {
+public class QBoardhide extends EntityPathBase<Boardhide> {
 
-    private static final long serialVersionUID = 355136355L;
+    private static final long serialVersionUID = -683396427L;
 
-    public static final QBoardcommunity boardcommunity = new QBoardcommunity("boardcommunity");
-
-    public final com.community.api.model.base.QBaseTime _super = new com.community.api.model.base.QBaseTime(this);
+    public static final QBoardhide boardhide = new QBoardhide("boardhide");
 
     public final NumberPath<Integer> boardType = createNumber("boardType", Integer.class);
 
     public final StringPath content = createString("content");
-
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> createdDt = _super.createdDt;
 
     public final NumberPath<Integer> hate = createNumber("hate", Integer.class);
 
@@ -42,21 +37,20 @@ public class QBoardcommunity extends EntityPathBase<Boardcommunity> {
 
     public final StringPath title = createString("title");
 
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> updatedDt = _super.updatedDt;
-
     public final NumberPath<Long> userId = createNumber("userId", Long.class);
 
-    public QBoardcommunity(String variable) {
-        super(Boardcommunity.class, forVariable(variable));
+    public final StringPath userIp = createString("userIp");
+
+    public QBoardhide(String variable) {
+        super(Boardhide.class, forVariable(variable));
     }
 
-    public QBoardcommunity(Path<? extends Boardcommunity> path) {
+    public QBoardhide(Path<? extends Boardhide> path) {
         super(path.getType(), path.getMetadata());
     }
 
-    public QBoardcommunity(PathMetadata metadata) {
-        super(Boardcommunity.class, metadata);
+    public QBoardhide(PathMetadata metadata) {
+        super(Boardhide.class, metadata);
     }
 
 }

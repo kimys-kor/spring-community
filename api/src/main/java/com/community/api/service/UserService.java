@@ -38,8 +38,8 @@ public class UserService {
     private final UserCustomRepository userCustomRepository;
 
 
-    public User findByEmail(String email) {
-        User byId = userRepository.findByUsername(email).orElseThrow(() -> new UsernameNotFoundException("없는 회원입니다."));
+    public User findByUsername(String username) {
+        User byId = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("없는 회원입니다."));
         return byId;
     }
 

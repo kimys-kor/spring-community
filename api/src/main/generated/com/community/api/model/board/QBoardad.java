@@ -1,4 +1,4 @@
-package com.community.api.model.boardensure;
+package com.community.api.model.board;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -10,14 +10,14 @@ import com.querydsl.core.types.Path;
 
 
 /**
- * QBoardensure is a Querydsl query type for Boardensure
+ * QBoardad is a Querydsl query type for Boardad
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QBoardensure extends EntityPathBase<Boardensure> {
+public class QBoardad extends EntityPathBase<Boardad> {
 
-    private static final long serialVersionUID = 2006933487L;
+    private static final long serialVersionUID = -2034228650L;
 
-    public static final QBoardensure boardensure = new QBoardensure("boardensure");
+    public static final QBoardad boardad = new QBoardad("boardad");
 
     public final com.community.api.model.base.QBaseTime _super = new com.community.api.model.base.QBaseTime(this);
 
@@ -47,16 +47,18 @@ public class QBoardensure extends EntityPathBase<Boardensure> {
 
     public final NumberPath<Long> userId = createNumber("userId", Long.class);
 
-    public QBoardensure(String variable) {
-        super(Boardensure.class, forVariable(variable));
+    public final StringPath userIp = createString("userIp");
+
+    public QBoardad(String variable) {
+        super(Boardad.class, forVariable(variable));
     }
 
-    public QBoardensure(Path<? extends Boardensure> path) {
+    public QBoardad(Path<? extends Boardad> path) {
         super(path.getType(), path.getMetadata());
     }
 
-    public QBoardensure(PathMetadata metadata) {
-        super(Boardensure.class, metadata);
+    public QBoardad(PathMetadata metadata) {
+        super(Boardad.class, metadata);
     }
 
 }

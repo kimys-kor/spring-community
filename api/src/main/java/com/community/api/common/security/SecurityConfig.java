@@ -50,6 +50,8 @@ public class SecurityConfig  {
                         .access("permitAll()")
                         .requestMatchers("/user/**")
                         .access("hasRole('ROLE_USER')")
+                        .requestMatchers("/admin/login")
+                        .access("permitAll()")
                         .requestMatchers("/admin/**")
                         .access("hasRole('ROLE_ADMIN') or hasRole('ROLE_MASTER')")
                         .anyRequest().permitAll())

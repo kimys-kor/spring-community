@@ -1,4 +1,4 @@
-package com.community.api.model.boardanalyze;
+package com.community.api.model.board;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -15,7 +15,7 @@ import com.querydsl.core.types.Path;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QBoardanalyze extends EntityPathBase<Boardanalyze> {
 
-    private static final long serialVersionUID = -1059435133L;
+    private static final long serialVersionUID = 1600139001L;
 
     public static final QBoardanalyze boardanalyze = new QBoardanalyze("boardanalyze");
 
@@ -46,6 +46,8 @@ public class QBoardanalyze extends EntityPathBase<Boardanalyze> {
     public final DateTimePath<java.time.LocalDateTime> updatedDt = _super.updatedDt;
 
     public final NumberPath<Long> userId = createNumber("userId", Long.class);
+
+    public final StringPath userIp = createString("userIp");
 
     public QBoardanalyze(String variable) {
         super(Boardanalyze.class, forVariable(variable));

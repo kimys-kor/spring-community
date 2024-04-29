@@ -20,14 +20,14 @@ public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
 
-    public void save(String email, String refreshToken) {
+    public void save(String username, String refreshToken) {
 
         RefreshTokenEntity tokenEntity = RefreshTokenEntity.builder()
                 .refreshToken(refreshToken)
-                .email(email)
+                .email(username)
                 .build();
 
-        refreshTokenRepository.deleteByEmailEquals(email);
+        refreshTokenRepository.deleteByEmailEquals(username);
         refreshTokenRepository.save(tokenEntity);
     }
 

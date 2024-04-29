@@ -1,4 +1,4 @@
-package com.community.api.model.boardanalyze;
+package com.community.api.model.board;
 
 import com.community.api.model.base.BaseTime;
 import jakarta.persistence.Entity;
@@ -13,22 +13,21 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Boardanalyze extends BaseTime {
-
+public class Boardcommunity extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //    1꽁머니 2토토 3기타 4구인구직
+    //    1자유 2유머 3포토
     private int boardType;
 
     private boolean notification;
     private Long userId;
+    private String userIp;
     private String title;
     private String content;
     private int hit;
     private int hate;
     private int likes;
     private String imgPath;
-
 }

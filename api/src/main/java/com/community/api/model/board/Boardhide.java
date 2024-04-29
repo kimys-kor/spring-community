@@ -1,6 +1,5 @@
-package com.community.api.model.boardcommunity;
+package com.community.api.model.board;
 
-import com.community.api.model.base.BaseTime;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,16 +12,17 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Boardcommunity extends BaseTime {
+public class Boardhide {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //    1자유 2유머 3포토
+    //    1숨김게시판 2신고삭제게시판
     private int boardType;
 
     private boolean notification;
     private Long userId;
+    private String userIp;
     private String title;
     private String content;
     private int hit;

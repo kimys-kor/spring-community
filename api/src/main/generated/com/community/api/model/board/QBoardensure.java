@@ -30,6 +30,8 @@ public class QBoardensure extends EntityPathBase<Boardensure> {
 
     public final NumberPath<Integer> hate = createNumber("hate", Integer.class);
 
+    public final BooleanPath hide = createBoolean("hide");
+
     public final NumberPath<Integer> hit = createNumber("hit", Integer.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);

@@ -28,7 +28,11 @@ public class QBoardad extends EntityPathBase<Boardad> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdDt = _super.createdDt;
 
+    public final StringPath fullname = createString("fullname");
+
     public final NumberPath<Integer> hate = createNumber("hate", Integer.class);
+
+    public final BooleanPath hide = createBoolean("hide");
 
     public final NumberPath<Integer> hit = createNumber("hit", Integer.class);
 

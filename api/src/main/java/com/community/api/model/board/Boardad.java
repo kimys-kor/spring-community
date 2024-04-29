@@ -23,6 +23,7 @@ public class Boardad extends BaseTime {
 
     private boolean notification;
     private Long userId;
+    private String fullname;
     private String userIp;
     private String title;
     private String content;
@@ -30,4 +31,5 @@ public class Boardad extends BaseTime {
     private int hate;
     private int likes;
     private String imgPath;
+    private boolean hide;
 }

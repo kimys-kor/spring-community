@@ -30,4 +30,5 @@ public class Boardensure extends BaseTime {
     private int hate;
     private int likes;
     private String imgPath;
+    private boolean hide;
 }

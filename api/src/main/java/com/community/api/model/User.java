@@ -26,6 +26,7 @@ public class User extends BaseTime {
     private String password;
 
     private String phoneNum;
+    private String fullname;
     private String nickname;
 
 

@@ -28,28 +28,30 @@ public class QBoardcommunity extends EntityPathBase<Boardcommunity> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdDt = _super.createdDt;
 
-    public final NumberPath<Integer> hate = createNumber("hate", Integer.class);
+    public final StringPath fullname = createString("fullname");
 
-    public final BooleanPath hide = createBoolean("hide");
+    public final NumberPath<Integer> hate = createNumber("hate", Integer.class);
 
     public final NumberPath<Integer> hit = createNumber("hit", Integer.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final StringPath imgPath = createString("imgPath");
+    public final BooleanPath isDeleted = createBoolean("isDeleted");
 
     public final NumberPath<Integer> likes = createNumber("likes", Integer.class);
 
     public final BooleanPath notification = createBoolean("notification");
+
+    public final NumberPath<Integer> replyNum = createNumber("replyNum", Integer.class);
 
     public final StringPath title = createString("title");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedDt = _super.updatedDt;
 
-    public final NumberPath<Long> userId = createNumber("userId", Long.class);
-
     public final StringPath userIp = createString("userIp");
+
+    public final NumberPath<Long> username = createNumber("username", Long.class);
 
     public QBoardcommunity(String variable) {
         super(Boardcommunity.class, forVariable(variable));

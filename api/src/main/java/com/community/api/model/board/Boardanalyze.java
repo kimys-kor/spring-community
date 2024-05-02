@@ -23,14 +23,15 @@ public class Boardanalyze extends BaseTime {
     private int boardType;
 
     private boolean notification;
-    private Long userId;
+    private Long username;
+    private String fullname;
     private String userIp;
     private String title;
     private String content;
     private int hit;
     private int hate;
     private int likes;
-    private String imgPath;
-    private boolean hide;
+    private boolean isDeleted;
+    private int replyNum;
 
 }

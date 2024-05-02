@@ -1,4 +1,4 @@
-package com.community.api.model.board;
+package com.community.api.model.boardreply;
 
 import com.community.api.model.base.BaseTime;
 import jakarta.persistence.Entity;
@@ -13,23 +13,20 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Boardcommunity extends BaseTime {
+public class replyanalyze extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //    1자유 2유머 3포토
-    private int boardType;
+    private Long boardId;
+    private int ref;
+    private int refOrder;
+    private int depth;
+    private Long parentNum;
 
-    private boolean notification;
-    private Long username;
+    private String username;
     private String fullname;
     private String userIp;
-    private String title;
     private String content;
-    private int hit;
-    private int hate;
-    private int likes;
     private boolean isDeleted;
-    private int replyNum;
 }

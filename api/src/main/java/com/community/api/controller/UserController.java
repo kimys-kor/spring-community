@@ -2,6 +2,7 @@ package com.community.api.controller;
 
 import com.community.api.model.dto.LoginRequestDto;
 import com.community.api.model.dto.UserDto;
+import com.community.api.service.BoardService;
 import com.community.api.service.RefreshTokenService;
 import com.community.api.common.exception.inteface.CustomException;
 import com.community.api.common.jwt.JwtTokenProvider;
@@ -31,6 +32,7 @@ public class UserController {
     private final JwtProperties jwtProperties;
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
+    private final BoardService boardService;
 
     @GetMapping(value = "/test")
     public Response<Object> test() {
@@ -92,9 +94,18 @@ public class UserController {
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
-    // 이메일, 비밀번호 찾기 (문자인증)
+    // 아이디, 비밀번호 찾기 (문자인증)
     // 내정보 수정
     // 내정보 확인
+
+    @GetMapping(value = "/list/board")
+    public Response<Object> listBoard(
+            @RequestParam String boardCategory,
+            @RequestParam int boardType
+    ) {
+
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
+    }
 
 
 }

@@ -1,4 +1,4 @@
-package com.community.api.model.boardreply;
+package com.community.api.model;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -10,14 +10,14 @@ import com.querydsl.core.types.Path;
 
 
 /**
- * Qreplyad is a Querydsl query type for replyad
+ * QBoardReply is a Querydsl query type for BoardReply
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class Qreplyad extends EntityPathBase<replyad> {
+public class QBoardReply extends EntityPathBase<BoardReply> {
 
-    private static final long serialVersionUID = 1956992398L;
+    private static final long serialVersionUID = -1717271569L;
 
-    public static final Qreplyad replyad = new Qreplyad("replyad");
+    public static final QBoardReply boardReply = new QBoardReply("boardReply");
 
     public final com.community.api.model.base.QBaseTime _super = new com.community.api.model.base.QBaseTime(this);
 
@@ -49,16 +49,16 @@ public class Qreplyad extends EntityPathBase<replyad> {
 
     public final StringPath username = createString("username");
 
-    public Qreplyad(String variable) {
-        super(replyad.class, forVariable(variable));
+    public QBoardReply(String variable) {
+        super(BoardReply.class, forVariable(variable));
     }
 
-    public Qreplyad(Path<? extends replyad> path) {
+    public QBoardReply(Path<? extends BoardReply> path) {
         super(path.getType(), path.getMetadata());
     }
 
-    public Qreplyad(PathMetadata metadata) {
-        super(replyad.class, metadata);
+    public QBoardReply(PathMetadata metadata) {
+        super(BoardReply.class, metadata);
     }
 
 }

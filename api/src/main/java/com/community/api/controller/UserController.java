@@ -1,6 +1,7 @@
 package com.community.api.controller;
 
 import com.community.api.model.dto.LoginRequestDto;
+import com.community.api.model.dto.ReadBoardListDto;
 import com.community.api.model.dto.UserDto;
 import com.community.api.service.BoardService;
 import com.community.api.service.RefreshTokenService;
@@ -16,6 +17,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -100,12 +103,13 @@ public class UserController {
 
     @GetMapping(value = "/list/board")
     public Response<Object> listBoard(
-            @RequestParam String boardCategory,
-            @RequestParam int boardType
-    ) {
-
-        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
+            @RequestParam int typ,
+            @RequestParam Pageable pageable
+            ) {
+        Page<ReadBoardListDto> list = boardService.getList(typ, pageable);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, list);
     }
+
 
 
 }

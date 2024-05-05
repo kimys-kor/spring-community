@@ -2,7 +2,7 @@ package com.community.api.controller;
 
 import com.community.api.model.dto.LoginRequestDto;
 import com.community.api.model.dto.ReadBoardListDto;
-import com.community.api.model.dto.UserDto;
+import com.community.api.model.dto.JoinRequestDto;
 import com.community.api.service.BoardService;
 import com.community.api.service.RefreshTokenService;
 import com.community.api.common.exception.inteface.CustomException;
@@ -16,6 +16,7 @@ import com.community.api.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,8 +60,8 @@ public class UserController {
     ) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(
-                        loginRequestDto.getUsername(),
-                        loginRequestDto.getPassword());
+                        loginRequestDto.username(),
+                        loginRequestDto.password());
 
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         PrincipalDetails principalDetailis = (PrincipalDetails) authenticate.getPrincipal();
@@ -86,14 +87,9 @@ public class UserController {
 
     @PostMapping(value = "/join")
     public Response<Object> join(
-            @RequestBody UserDto userDto
-    ) throws CustomException {
-        System.out.println(userDto.getPassword());
-        System.out.println(userDto.getUsername());
-        System.out.println(userDto.getNickname());
-        System.out.println(userDto.getPhoneNum());
-
-        userService.join(userDto);
+            @RequestBody @Valid JoinRequestDto joinRequestDto
+    ){
+        userService.join(joinRequestDto);
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 

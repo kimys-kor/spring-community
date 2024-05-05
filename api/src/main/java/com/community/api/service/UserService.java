@@ -3,7 +3,7 @@ package com.community.api.service;
 import com.community.api.model.User;
 import com.community.api.model.base.UserGrade;
 import com.community.api.model.dto.UserDetailDto;
-import com.community.api.model.dto.UserDto;
+import com.community.api.model.dto.JoinRequestDto;
 import com.community.api.model.dto.UserReadDto;
 import com.community.api.repository.UserCustomRepository;
 import com.community.api.common.exception.inteface.CustomException;
@@ -68,15 +68,21 @@ public class UserService {
         return result;
     }
 
-    public void join(UserDto userDto) throws CustomException{
-        String encPassword = passwordEncoder.encode(userDto.getPassword());
-        userDto.setPassword(encPassword);
-        User user = new User(userDto.getUsername(), userDto.getPassword(), userDto.getNickname(), userDto.getPhoneNum());
-        try {
-            userRepository.save(user);
-        } catch (Exception e) {
-            throw new CustomException(AuthenticationErrorCode.USER_ALREADY_EXIST);
+    public void join(JoinRequestDto joinRequestDto) {
+        Optional<User> findUser = userRepository.findByUsername(joinRequestDto.username());
+        if (!findUser.isEmpty()) {
+            throw AuthenticationErrorCode.USER_ALREADY_EXIST.defaultException();
         }
+
+        User user = User.builder()
+                .username(joinRequestDto.username())
+                .password(passwordEncoder.encode(joinRequestDto.password()))
+                .fullName(joinRequestDto.fullName())
+                .phoneNum(joinRequestDto.phoneNum())
+                .nickname(joinRequestDto.nickname())
+                .build();
+
+        userRepository.save(user);
     }
 
     

@@ -47,8 +47,8 @@ public class AdminController {
     ) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(
-                        loginRequestDto.getUsername(),
-                        loginRequestDto.getPassword());
+                        loginRequestDto.username(),
+                        loginRequestDto.password());
 
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         PrincipalDetails principalDetailis = (PrincipalDetails) authenticate.getPrincipal();

@@ -17,7 +17,7 @@ public class RefreshTokenEntity {
     @Id
     private String refreshToken;
 
-    private String email;
+    private String username;
 
     private String ip;
 

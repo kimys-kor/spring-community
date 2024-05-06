@@ -10,25 +10,21 @@ import com.querydsl.core.types.Path;
 
 
 /**
- * QBoard is a Querydsl query type for Board
+ * QPost is a Querydsl query type for Post
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QBoard extends EntityPathBase<Board> {
+public class QPost extends EntityPathBase<Post> {
 
-    private static final long serialVersionUID = -1350190149L;
+    private static final long serialVersionUID = 1203789099L;
 
-    public static final QBoard board = new QBoard("board");
+    public static final QPost post = new QPost("post");
 
     public final com.community.api.model.base.QBaseTime _super = new com.community.api.model.base.QBaseTime(this);
-
-    public final NumberPath<Integer> boardType = createNumber("boardType", Integer.class);
 
     public final StringPath content = createString("content");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdDt = _super.createdDt;
-
-    public final StringPath fullname = createString("fullname");
 
     public final NumberPath<Integer> hate = createNumber("hate", Integer.class);
 
@@ -40,7 +36,11 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final NumberPath<Integer> likes = createNumber("likes", Integer.class);
 
+    public final StringPath nickname = createString("nickname");
+
     public final BooleanPath notification = createBoolean("notification");
+
+    public final NumberPath<Integer> postType = createNumber("postType", Integer.class);
 
     public final NumberPath<Integer> replyNum = createNumber("replyNum", Integer.class);
 
@@ -53,16 +53,16 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final StringPath username = createString("username");
 
-    public QBoard(String variable) {
-        super(Board.class, forVariable(variable));
+    public QPost(String variable) {
+        super(Post.class, forVariable(variable));
     }
 
-    public QBoard(Path<? extends Board> path) {
+    public QPost(Path<? extends Post> path) {
         super(path.getType(), path.getMetadata());
     }
 
-    public QBoard(PathMetadata metadata) {
-        super(Board.class, metadata);
+    public QPost(PathMetadata metadata) {
+        super(Post.class, metadata);
     }
 
 }

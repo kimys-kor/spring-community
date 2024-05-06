@@ -5,7 +5,7 @@ import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class BoardReplyCustomRepository {
+public class CommentCustomRepository {
 
     @PersistenceContext
     private EntityManager em;

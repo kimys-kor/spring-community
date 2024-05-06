@@ -18,9 +18,8 @@ public class PrincipalDetailsService implements UserDetailsService {
 
     // 시큐리티 Session(내부 Authentication(내부 UserDetails))
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        System.out.println("loaduser실행");
-        User user = userService.findByUsername(email);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userService.findByUsername(username);
         
         // 마지막로그인 업데이트
         LocalDateTime currentDateTime = LocalDateTime.now();

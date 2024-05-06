@@ -46,14 +46,16 @@ public class SecurityConfig  {
                 .apply(new MyCustomDsl()) // 커스텀 필터 등록
                 .and()
                 .authorizeRequests(authroize -> authroize
-                        .requestMatchers("/user/login","/user/join", "/user/refresh")
+                        .requestMatchers("/user/login","/user/join", "/user/refresh", "/board/**")
                         .access("permitAll()")
                         .requestMatchers("/user/**")
-                        .access("hasRole('ROLE_USER')")
+                        .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN') or hasRole('ROLE_MASTER')")
                         .requestMatchers("/admin/login")
                         .access("permitAll()")
                         .requestMatchers("/admin/**")
                         .access("hasRole('ROLE_ADMIN') or hasRole('ROLE_MASTER')")
+                        .requestMatchers("/master/**")
+                        .access("hasRole('ROLE_MASTER')")
                         .anyRequest().permitAll())
                 .exceptionHandling()
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())

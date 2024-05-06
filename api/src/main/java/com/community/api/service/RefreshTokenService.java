@@ -24,10 +24,10 @@ public class RefreshTokenService {
 
         RefreshTokenEntity tokenEntity = RefreshTokenEntity.builder()
                 .refreshToken(refreshToken)
-                .email(username)
+                .username(username)
                 .build();
 
-        refreshTokenRepository.deleteByEmailEquals(username);
+        refreshTokenRepository.deleteByUsernameEquals(username);
         refreshTokenRepository.save(tokenEntity);
     }
 
@@ -45,7 +45,7 @@ public class RefreshTokenService {
         RefreshTokenEntity tokenEntity = refreshTokenRepository.findById(oldRefreshToken).orElseThrow(
                 AuthenticationErrorCode.UNKNOWN_REFRESH_TOKEN::defaultException);
 
-        String email = tokenEntity.getEmail();
+        String email = tokenEntity.getUsername();
         Long userId = userRepository.findByUsername(email).orElseThrow(
                 AuthenticationErrorCode.AUTHENTICATION_FAILED::defaultException).getId();
 
@@ -55,6 +55,6 @@ public class RefreshTokenService {
     }
 
     public boolean existsByRefreshTokenAndEmail(String refreshToken, String email) {
-        return refreshTokenRepository.existsByRefreshTokenAndEmail(refreshToken, email);
+        return refreshTokenRepository.existsByRefreshTokenAndUsername(refreshToken, email);
     }
 }

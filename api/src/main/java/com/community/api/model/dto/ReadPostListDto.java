@@ -3,10 +3,10 @@ package com.community.api.model.dto;
 import lombok.Data;
 
 @Data
-public class ReadBoardListDto {
+public class ReadPostListDto {
     private Long id;
     private String username;
-    private String fullname;
+    private String nickname;
     private String userIp;
     private String title;
     private int hit;

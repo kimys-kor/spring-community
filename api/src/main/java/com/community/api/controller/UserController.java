@@ -1,11 +1,12 @@
 package com.community.api.controller;
 
+import com.community.api.common.UserCheck;
 import com.community.api.model.dto.LoginRequestDto;
-import com.community.api.model.dto.ReadBoardListDto;
+import com.community.api.model.dto.ReadPostListDto;
 import com.community.api.model.dto.JoinRequestDto;
-import com.community.api.service.BoardService;
+import com.community.api.model.dto.RequestPostDto;
+import com.community.api.service.PostService;
 import com.community.api.service.RefreshTokenService;
-import com.community.api.common.exception.inteface.CustomException;
 import com.community.api.common.jwt.JwtTokenProvider;
 import com.community.api.common.properties.JwtProperties;
 import com.community.api.common.random.StringSecureRandom;
@@ -23,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -36,7 +38,7 @@ public class UserController {
     private final JwtProperties jwtProperties;
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
-    private final BoardService boardService;
+    private final PostService postService;
 
     @GetMapping(value = "/test")
     public Response<Object> test() {
@@ -97,14 +99,21 @@ public class UserController {
     // 내정보 수정
     // 내정보 확인
 
-    @GetMapping(value = "/list/board")
-    public Response<Object> listBoard(
-            @RequestParam int typ,
-            @RequestParam Pageable pageable
-            ) {
-        Page<ReadBoardListDto> list = boardService.getList(typ, pageable);
-        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, list);
+
+
+    @PostMapping(value = "/save/post")
+    public Response<Object> SavePost(
+            @RequestBody RequestPostDto requestPostDto,
+            HttpServletRequest request,
+            Authentication authentication
+    ) {
+        PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+        String username = principalDetailis.getUsername();
+
+        postService.savePost(request.getRemoteAddr(), username, requestPostDto);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
+
 
 
 

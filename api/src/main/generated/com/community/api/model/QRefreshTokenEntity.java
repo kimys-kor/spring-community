@@ -19,11 +19,11 @@ public class QRefreshTokenEntity extends EntityPathBase<RefreshTokenEntity> {
 
     public static final QRefreshTokenEntity refreshTokenEntity = new QRefreshTokenEntity("refreshTokenEntity");
 
-    public final StringPath email = createString("email");
-
     public final StringPath ip = createString("ip");
 
     public final StringPath refreshToken = createString("refreshToken");
+
+    public final StringPath username = createString("username");
 
     public QRefreshTokenEntity(String variable) {
         super(RefreshTokenEntity.class, forVariable(variable));

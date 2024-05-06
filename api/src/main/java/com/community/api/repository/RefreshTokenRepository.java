@@ -7,8 +7,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface RefreshTokenRepository extends JpaRepository<RefreshTokenEntity, String> {
 
-    boolean existsByRefreshTokenAndEmail(String refreshToken, String email);
+    boolean existsByRefreshTokenAndUsername(String refreshToken, String email);
 
     @Transactional
-    void deleteByEmailEquals(@Param("email") String email);
+    void deleteByUsernameEquals(@Param("email") String email);
 }

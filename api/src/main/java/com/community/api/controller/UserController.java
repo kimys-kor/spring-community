@@ -1,10 +1,9 @@
 package com.community.api.controller;
 
-import com.community.api.common.UserCheck;
 import com.community.api.model.dto.LoginRequestDto;
-import com.community.api.model.dto.ReadPostListDto;
 import com.community.api.model.dto.JoinRequestDto;
-import com.community.api.model.dto.RequestPostDto;
+import com.community.api.model.dto.SavePostDto;
+import com.community.api.model.dto.UpdatePostDto;
 import com.community.api.service.PostService;
 import com.community.api.service.RefreshTokenService;
 import com.community.api.common.jwt.JwtTokenProvider;
@@ -19,12 +18,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -81,7 +77,6 @@ public class UserController {
         cookie.setHttpOnly(true);
         response.addCookie(cookie);
 
-
         refreshTokenService.save(principalDetailis.getUser().getUsername(), refreshToken);
 
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
@@ -99,20 +94,44 @@ public class UserController {
     // 내정보 수정
     // 내정보 확인
 
-
-
     @PostMapping(value = "/save/post")
-    public Response<Object> SavePost(
-            @RequestBody RequestPostDto requestPostDto,
+    public Response<Object> savePost(
+            @RequestBody SavePostDto savePostDto,
             HttpServletRequest request,
             Authentication authentication
     ) {
         PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
         String username = principalDetailis.getUsername();
 
-        postService.savePost(request.getRemoteAddr(), username, requestPostDto);
+        postService.savePost(request.getRemoteAddr(), username, savePostDto);
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
+
+    @PatchMapping(value = "/update/post")
+    public Response<Object> updatePost(
+            @RequestBody UpdatePostDto updatePostDto,
+            Authentication authentication
+    ) {
+        PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+        String username = principalDetailis.getUsername();
+
+        postService.updatePost(username, updatePostDto);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
+    }
+
+    @DeleteMapping(value = "/delete/post")
+    public Response<Object> deletePost(
+            Long postId,
+            Authentication authentication
+    ) {
+        PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+        String username = principalDetailis.getUsername();
+
+        postService.deletePost(username, postId);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
+    }
+
+
 
 
 

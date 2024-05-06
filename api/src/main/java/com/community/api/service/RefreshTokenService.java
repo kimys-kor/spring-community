@@ -1,7 +1,7 @@
 package com.community.api.service;
 
 import com.community.api.common.exception.AuthenticationErrorCode;
-import com.community.api.common.exception.AuthenticationException;
+import com.community.api.common.exception.CommonException;
 import com.community.api.common.jwt.JwtTokenProvider;
 import com.community.api.model.RefreshTokenEntity;
 import com.community.api.repository.RefreshTokenRepository;
@@ -34,7 +34,7 @@ public class RefreshTokenService {
     public String refresh(HttpServletRequest request) {
 
         Cookie[] cookies = request.getCookies();
-        if (cookies == null) throw new AuthenticationException(AuthenticationErrorCode.UNKNOWN_ERROR);
+        if (cookies == null) throw new CommonException(AuthenticationErrorCode.UNKNOWN_ERROR);
 
         String oldRefreshToken = Arrays.stream(cookies)
             .filter(eachCookie -> "refresh_token".equals(eachCookie.getName()))

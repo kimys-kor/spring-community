@@ -36,12 +36,12 @@ public enum AuthenticationErrorCode implements ErrorCode {
     }
 
     @Override
-    public AuthenticationException defaultException() {
-        return new AuthenticationException(this);
+    public CommonException defaultException() {
+        return new CommonException(this);
     }
 
     @Override
-    public AuthenticationException defaultException(Throwable cause) {
-        return new AuthenticationException(this, cause);
+    public CommonException defaultException(Throwable cause) {
+        return new CommonException(this, cause);
     }
 }

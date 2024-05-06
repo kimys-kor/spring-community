@@ -2,10 +2,9 @@ package com.community.api.model.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
-import lombok.Data;
 
 @Builder
-public record RequestPostDto(
+public record SavePostDto(
         @NotBlank(message = "postType must not be blank")
         int postType,
         @NotBlank(message = "notification must not be blank")

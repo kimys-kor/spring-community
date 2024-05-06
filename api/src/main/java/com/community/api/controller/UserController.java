@@ -96,7 +96,7 @@ public class UserController {
 
     @PostMapping(value = "/save/post")
     public Response<Object> savePost(
-            @RequestBody SavePostDto savePostDto,
+            @RequestBody @Valid SavePostDto savePostDto,
             HttpServletRequest request,
             Authentication authentication
     ) {
@@ -109,7 +109,7 @@ public class UserController {
 
     @PatchMapping(value = "/update/post")
     public Response<Object> updatePost(
-            @RequestBody UpdatePostDto updatePostDto,
+            @RequestBody @Valid UpdatePostDto updatePostDto,
             Authentication authentication
     ) {
         PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();

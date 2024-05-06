@@ -4,6 +4,7 @@ import com.community.api.model.base.BaseTime;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -37,6 +38,7 @@ public class Post extends BaseTime {
     private boolean isDeleted;
     private int replyNum;
 
-
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    private List<Comment> commentList = new ArrayList<>();
 
 }

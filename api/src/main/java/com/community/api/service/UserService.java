@@ -2,6 +2,7 @@ package com.community.api.service;
 
 import com.community.api.model.User;
 import com.community.api.model.base.UserGrade;
+import com.community.api.model.base.UserRole;
 import com.community.api.model.dto.UserDetailDto;
 import com.community.api.model.dto.JoinRequestDto;
 import com.community.api.model.dto.UserReadDto;
@@ -80,6 +81,7 @@ public class UserService {
                 .fullName(joinRequestDto.fullName())
                 .phoneNum(joinRequestDto.phoneNum())
                 .nickname(joinRequestDto.nickname())
+                .role(UserRole.ROLE_USER)
                 .build();
 
         userRepository.save(user);

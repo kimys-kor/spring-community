@@ -41,8 +41,8 @@ public class PostCustomRepository {
                         ))
                 .from(post)
                 .where(
-//                        post.postType.eq(typ),
-//                        post.isDeleted.eq(false)
+                        post.postType.eq(typ),
+                        post.isDeleted.eq(false)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

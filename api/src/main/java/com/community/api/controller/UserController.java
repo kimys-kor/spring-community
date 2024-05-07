@@ -1,9 +1,8 @@
 package com.community.api.controller;
 
-import com.community.api.model.dto.LoginRequestDto;
-import com.community.api.model.dto.JoinRequestDto;
-import com.community.api.model.dto.SavePostDto;
-import com.community.api.model.dto.UpdatePostDto;
+import com.community.api.model.Comment;
+import com.community.api.model.dto.*;
+import com.community.api.service.CommentService;
 import com.community.api.service.PostService;
 import com.community.api.service.RefreshTokenService;
 import com.community.api.common.jwt.JwtTokenProvider;
@@ -23,6 +22,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -35,6 +36,7 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final PostService postService;
+    private final CommentService commentService;
 
     @GetMapping(value = "/test")
     public Response<Object> test() {
@@ -53,7 +55,7 @@ public class UserController {
 
     @PostMapping(value = "/login")
     public Response<Object> login(
-            @RequestBody LoginRequestDto loginRequestDto,
+            @RequestBody @Valid LoginRequestDto loginRequestDto,
             HttpServletResponse response
     ) {
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -96,7 +98,7 @@ public class UserController {
 
     @PostMapping(value = "/save/post")
     public Response<Object> savePost(
-            @RequestBody SavePostDto savePostDto,
+            @RequestBody @Valid SavePostDto savePostDto,
             HttpServletRequest request,
             Authentication authentication
     ) {
@@ -109,7 +111,7 @@ public class UserController {
 
     @PatchMapping(value = "/update/post")
     public Response<Object> updatePost(
-            @RequestBody UpdatePostDto updatePostDto,
+            @RequestBody @Valid UpdatePostDto updatePostDto,
             Authentication authentication
     ) {
         PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
@@ -131,6 +133,26 @@ public class UserController {
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
+    @PostMapping(value = "/write/comment")
+    public Response<Object> writeComment(
+            @RequestBody @Valid SaveCommentDto saveCommentDto,
+            HttpServletRequest request,
+            Authentication authentication
+            ) {
+        PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+        String username = principalDetailis.getUsername();
+
+        commentService.saveComment(request.getRemoteAddr(), username, saveCommentDto);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
+    }
+
+    @GetMapping(value = "/list/comment")
+    public Response<Object> listComment(
+            Long boardId
+    ) {
+        List<ReadCommentDto> commentList = commentService.findCommentsByPostId(boardId);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, commentList);
+    }
 
 
 

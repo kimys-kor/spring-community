@@ -38,4 +38,7 @@ public class Comment extends BaseTime {
     @Builder.Default
     private List<Comment> children = new ArrayList<>();
 
+    public void changeDeletedStatus(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
 }

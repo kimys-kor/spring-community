@@ -13,6 +13,9 @@ import com.community.api.repository.CommentCustomRepository;
 import com.community.api.repository.CommentRepository;
 import com.community.api.repository.PostRepository;
 import com.community.api.repository.UserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CommentService {
 
+    @PersistenceContext
+    EntityManager em;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final CommentCustomRepository commentCustomRepository;
@@ -55,6 +60,22 @@ public class CommentService {
         return convertNestedStructure(commentCustomRepository.findByboardId(boardId));
     }
 
+    public void deleteComment(Long commentId) {
+        Comment comment = commentRepository.findCommentByIdWithParent(commentId);
+        if(comment.getChildren().size() != 0) {
+            comment.changeDeletedStatus(true);
+        } else {
+            commentRepository.delete(getDeletableAncestorComment(comment));
+        }
+    }
+
+    private Comment getDeletableAncestorComment(Comment comment) {
+        Comment parent = comment.getParent();
+        if(parent != null && parent.getChildren().size() == 1 && parent.isDeleted() == true)
+            return getDeletableAncestorComment(parent);
+        return comment;
+    }
+
     private List<ReadCommentDto> convertNestedStructure(List<Comment> comments) {
         List<ReadCommentDto> result = new ArrayList<>();
         Map<Long, ReadCommentDto> map = new HashMap<>();
@@ -65,5 +86,13 @@ public class CommentService {
             else result.add(dto);
         });
         return result;
+    }
+
+    @Transactional
+    public void updateComment(SaveCommentDto saveCommentDto) {
+        Comment comment = commentRepository.findById(saveCommentDto.id()).orElseThrow(CommentErrorCode.COMMENT_NOT_EXIST::defaultException);
+        comment.setContent(saveCommentDto.content());
+        em.flush();
+        em.clear();
     }
 }

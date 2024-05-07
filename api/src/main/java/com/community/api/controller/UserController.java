@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -121,9 +122,9 @@ public class UserController {
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
-    @DeleteMapping(value = "/delete/post")
+    @DeleteMapping(value = "/post/{id}")
     public Response<Object> deletePost(
-            Long postId,
+            @PathVariable Long postId,
             Authentication authentication
     ) {
         PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
@@ -152,6 +153,18 @@ public class UserController {
     ) {
         List<ReadCommentDto> commentList = commentService.findCommentsByPostId(boardId);
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, commentList);
+    }
+
+    @DeleteMapping("/comment/{id}")
+    private Response<Object> deleteComment(@PathVariable Long id){
+        commentService.deleteComment(id);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
+    }
+
+    @PatchMapping("/comment")
+    private Response<Object> updateComment(@RequestBody SaveCommentDto saveCommentDto){
+        commentService.updateComment(saveCommentDto);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
 

@@ -23,8 +23,6 @@ public class QBlockedIp extends EntityPathBase<BlockedIp> {
 
     public final StringPath ipAddress = createString("ipAddress");
 
-    public final StringPath reason = createString("reason");
-
     public QBlockedIp(String variable) {
         super(BlockedIp.class, forVariable(variable));
     }

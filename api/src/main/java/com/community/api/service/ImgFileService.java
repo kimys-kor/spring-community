@@ -24,4 +24,6 @@ public class ImgFileService {
     public ImgFile findByIdEquals(int id) {
         return imgFileRepository.findByIdEquals(id);
     }
+
+
 }

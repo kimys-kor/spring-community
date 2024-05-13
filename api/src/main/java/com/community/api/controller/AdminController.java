@@ -6,7 +6,11 @@ import com.community.api.common.random.StringSecureRandom;
 import com.community.api.common.response.Response;
 import com.community.api.common.response.ResultCode;
 import com.community.api.common.security.PrincipalDetails;
+import com.community.api.model.ApprovedIp;
+import com.community.api.model.BlockedIp;
 import com.community.api.model.dto.LoginRequestDto;
+import com.community.api.model.dto.SaveIpDto;
+import com.community.api.service.IpService;
 import com.community.api.service.RefreshTokenService;
 import com.community.api.service.UserService;
 
@@ -33,6 +37,7 @@ public class AdminController {
     private final RefreshTokenService refreshTokenService;
     private final JwtProperties jwtProperties;
     private final AuthenticationManager authenticationManager;
+    private final IpService ipService;
 
 
     @GetMapping(value = "/test")
@@ -72,20 +77,41 @@ public class AdminController {
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
-    // 대시보드 일주일 신규 회원 라인 차트
-    @GetMapping(value = "/dashboard/weekuser")
-    public Response<Object> getWeekNewUserData(
-    ) {
-        List data = userService.countAllByCreatedDtBetween();
+    // ip추가
+    @PostMapping(value = "/add/ip")
+    public Response<Object> addIp(
+            @RequestBody SaveIpDto saveIpDto
+            ) {
 
-        List result = new ArrayList<>();
-        Map<String, Object> map = new HashMap<>();
-        map.put("id", "week");
-        map.put("data", data);
-        result.add(map);
-
-        return new Response(ResultCode.DATA_NORMAL_PROCESSING,result);
+        ipService.saveIp(saveIpDto);
+        return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
+
+    // 차단 ip리스트
+    @GetMapping(value = "/blockediplist")
+    public Response<Object> findAllBlockedIp(
+    ) {
+        List<BlockedIp> allBlockedIp = ipService.findAllBlockedIp();
+        return new Response(ResultCode.DATA_NORMAL_PROCESSING, allBlockedIp);
+    }
+
+    // 허용 ip리스트
+    @GetMapping(value = "/approvediplist")
+    public Response<Object> findAllApprovedIp(
+    ) {
+        List<ApprovedIp> allApprovedIp = ipService.findAllApprovedIp();
+        return new Response(ResultCode.DATA_NORMAL_PROCESSING, allApprovedIp);
+    }
+
+    @DeleteMapping(value = "/delete/ip")
+    public Response<Object> deleteIp(
+        String type,
+        Long ipId
+    ) {
+        ipService.deleteIp(type, ipId);
+        return new Response(ResultCode.DATA_NORMAL_PROCESSING);
+    }
+
 
     // 유저 리스트
     @GetMapping(value = "/user/findall")
@@ -127,6 +153,7 @@ public class AdminController {
         userService.updateInfo(userId, userNickname, userGrade);
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
+
 
 
 }

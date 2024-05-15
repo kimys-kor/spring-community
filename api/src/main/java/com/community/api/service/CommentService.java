@@ -7,6 +7,7 @@ import com.community.api.common.exception.CommentErrorCode;
 import com.community.api.model.Comment;
 import com.community.api.model.Post;
 import com.community.api.model.User;
+import com.community.api.model.base.UserRole;
 import com.community.api.model.dto.ReadCommentDto;
 import com.community.api.model.dto.SaveCommentDto;
 import com.community.api.repository.CommentCustomRepository;
@@ -69,8 +70,14 @@ public class CommentService {
         return convertNestedStructure(commentCustomRepository.findByboardId(boardId));
     }
 
-    public void deleteComment(Long commentId) {
+    public void deleteComment(String username, Long commentId) {
         Comment comment = commentRepository.findCommentByIdWithParent(commentId);
+        User user = userRepository.findByUsername(username).orElseThrow(AuthenticationErrorCode.USER_NOT_EXIST::defaultException);
+
+        if (!comment.getUsername().equals(username) && user.getRole().equals(UserRole.ROLE_USER)) {
+            throw CommentErrorCode.COMMENT_WRITER_NOT_EQUALS.defaultException();
+        }
+
         if(comment.getChildren().size() != 0) {
             comment.changeDeletedStatus(true);
         } else {
@@ -98,10 +105,19 @@ public class CommentService {
     }
 
     @Transactional
-    public void updateComment(SaveCommentDto saveCommentDto) {
+    public void updateComment(String username, SaveCommentDto saveCommentDto) {
         Comment comment = commentRepository.findById(saveCommentDto.id()).orElseThrow(CommentErrorCode.COMMENT_NOT_EXIST::defaultException);
+        User user = userRepository.findByUsername(username).orElseThrow(AuthenticationErrorCode.USER_NOT_EXIST::defaultException);
+
+        if (!comment.getUsername().equals(username) && user.getRole().equals(UserRole.ROLE_USER)) {
+            throw CommentErrorCode.COMMENT_WRITER_NOT_EQUALS.defaultException();
+        }
+
         comment.setContent(saveCommentDto.content());
         em.flush();
         em.clear();
     }
+
+
+
 }

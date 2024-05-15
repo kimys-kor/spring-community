@@ -81,6 +81,7 @@ public class UserService {
                 .fullName(joinRequestDto.fullName())
                 .phoneNum(joinRequestDto.phoneNum())
                 .nickname(joinRequestDto.nickname())
+                .point(0)
                 .role(UserRole.ROLE_USER)
                 .build();
 

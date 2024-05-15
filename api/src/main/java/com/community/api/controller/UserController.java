@@ -117,7 +117,7 @@ public class UserController {
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
-    // 게시글 수정 (작성자 본인 수정필요)
+    // 게시글 수정
     @PatchMapping(value = "/update/post")
     public Response<Object> updatePost(
             @RequestBody @Valid UpdatePostDto updatePostDto,
@@ -130,8 +130,8 @@ public class UserController {
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
-    // 게시글 삭제 (작성자 본인 수정필요)
-    @DeleteMapping(value = "/post/{id}")
+    // 게시글 삭제
+    @DeleteMapping(value = "/post/{postId}")
     public Response<Object> deletePost(
             @PathVariable Long postId,
             Authentication authentication
@@ -150,6 +150,7 @@ public class UserController {
             HttpServletRequest request,
             Authentication authentication
             ) {
+
         PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
         String username = principalDetailis.getUsername();
 
@@ -167,16 +168,28 @@ public class UserController {
     }
 
     // 댓글 삭제 (작성자 본인 수정필요)
-    @DeleteMapping("/comment/{id}")
-    private Response<Object> deleteComment(@PathVariable Long id){
-        commentService.deleteComment(id);
+    @DeleteMapping("/comment/{commentId}")
+    private Response<Object> deleteComment(
+            @PathVariable Long commentId,
+            Authentication authentication
+    ){
+        PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+        String username = principalDetailis.getUsername();
+
+        commentService.deleteComment(username, commentId);
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
     // 댓글 수정
     @PatchMapping("/comment")
-    private Response<Object> updateComment(@RequestBody SaveCommentDto saveCommentDto){
-        commentService.updateComment(saveCommentDto);
+    private Response<Object> updateComment(
+            @RequestBody SaveCommentDto saveCommentDto,
+            Authentication authentication
+    ){
+        PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+        String username = principalDetailis.getUsername();
+
+        commentService.updateComment(username, saveCommentDto);
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 

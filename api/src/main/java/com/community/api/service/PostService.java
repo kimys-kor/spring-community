@@ -2,8 +2,10 @@ package com.community.api.service;
 
 import com.community.api.common.exception.AuthenticationErrorCode;
 import com.community.api.common.exception.BoardErrorCode;
+import com.community.api.common.exception.CommentErrorCode;
 import com.community.api.model.Post;
 import com.community.api.model.User;
+import com.community.api.model.base.UserRole;
 import com.community.api.model.dto.ReadPostContentDto;
 import com.community.api.model.dto.ReadPostListDto;
 import com.community.api.model.dto.SavePostDto;
@@ -69,13 +71,14 @@ public class PostService {
 
         @Transactional
         public void updatePost(String username, UpdatePostDto updatePostDto) {
-                Optional<User> userOptional = userRepository.findByUsername(username);
-                if (userOptional.isEmpty()) {
-                        throw AuthenticationErrorCode.USER_NOT_EXIST.defaultException();
-                }
-
                 Post post = postRepository.findById(updatePostDto.postId()).orElseThrow(
                         BoardErrorCode.POST_NOT_EXIST::defaultException);
+
+                User user = userRepository.findByUsername(username).orElseThrow(AuthenticationErrorCode.USER_NOT_EXIST::defaultException);
+
+                if (!post.getUsername().equals(username) && user.getRole().equals(UserRole.ROLE_USER)) {
+                        throw BoardErrorCode.POST_WRITER_NOT_EQUALS.defaultException();
+                }
 
                 post.setPostType(updatePostDto.postType());
                 post.setNotification(updatePostDto.notification());
@@ -86,15 +89,13 @@ public class PostService {
         }
 
         public void deletePost(String username, Long postId) {
-                Optional<User> userOptional = userRepository.findByUsername(username);
                 Post post = postRepository.findById(postId).orElseThrow(BoardErrorCode.POST_NOT_EXIST::defaultException);
+                User user = userRepository.findByUsername(username).orElseThrow(AuthenticationErrorCode.USER_NOT_EXIST::defaultException);
 
-                if (userOptional.isEmpty()) {
-                        throw AuthenticationErrorCode.USER_NOT_EXIST.defaultException();
-                }
-                if(!post.getUsername().equals(userOptional.get().getUsername())){
+                if (!post.getUsername().equals(username) && user.getRole().equals(UserRole.ROLE_USER)) {
                         throw BoardErrorCode.POST_WRITER_NOT_EQUALS.defaultException();
                 }
+
                 postRepository.delete(post);
         }
 

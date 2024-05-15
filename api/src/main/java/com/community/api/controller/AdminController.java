@@ -112,6 +112,8 @@ public class AdminController {
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
+    // 게시글
+
 
     // 유저 리스트
     @GetMapping(value = "/user/findall")

@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -19,6 +18,7 @@ public class BoardController {
 
     private final PostService postService;
 
+    // 게시글 리스트
     @GetMapping(value = "/list")
     public Response<Object> BoardList(
             int typ,
@@ -28,6 +28,7 @@ public class BoardController {
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, list);
     }
 
+    // 게시글 상세
     @GetMapping(value = "/content")
     public Response<Object> BoardContent(
             Long boardId

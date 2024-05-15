@@ -37,6 +37,15 @@ public class CommentService {
 
 
     public void saveComment(String remoteAddr, String username, SaveCommentDto saveCommentDto) {
+        
+        // 대댓글 까지만 허용
+        if (saveCommentDto.parentId() != null) {
+            Comment parentComment = commentRepository.findById(saveCommentDto.parentId()).orElseThrow();
+            if (parentComment.getParent() != null) {
+                throw BoardErrorCode.COMMENT_ONLY_CAN_2STEP.defaultException();
+            }
+        }
+        
         Post post = postRepository.findById(saveCommentDto.boardId()).orElseThrow(BoardErrorCode.POST_NOT_EXIST::defaultException);
         User user = userRepository.findByUsername(username).orElseThrow(AuthenticationErrorCode.USER_NOT_EXIST::defaultException);
 

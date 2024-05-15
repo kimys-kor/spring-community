@@ -20,6 +20,7 @@ public enum AuthenticationErrorCode implements ErrorCode {
     AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "유저 인증에 실패하였습니다"),
     USER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "이미 존재하는 ID입니다"),
     USER_NOT_EXIST(HttpStatus.BAD_REQUEST, "존재하지 않는 ID입니다"),
+
     ;
 
     public final HttpStatus status;

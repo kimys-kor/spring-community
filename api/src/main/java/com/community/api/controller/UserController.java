@@ -1,6 +1,8 @@
 package com.community.api.controller;
 
+import com.community.api.common.exception.AuthenticationErrorCode;
 import com.community.api.model.Comment;
+import com.community.api.model.User;
 import com.community.api.model.dto.*;
 import com.community.api.service.CommentService;
 import com.community.api.service.PostService;
@@ -44,6 +46,7 @@ public class UserController {
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
+    // 토큰 리프레쉬
     @GetMapping(value = "/refresh")
     public Response<Object> refresh (
             HttpServletRequest request,
@@ -54,13 +57,15 @@ public class UserController {
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
+    // 로그인
     @PostMapping(value = "/login")
     public Response<Object> login(
             @RequestBody @Valid LoginRequestDto loginRequestDto,
             HttpServletResponse response
     ) {
+        
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(
+                new UsernamePasswordAuthenticationToken( 
                         loginRequestDto.username(),
                         loginRequestDto.password());
 
@@ -85,6 +90,7 @@ public class UserController {
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
+    // 회원가입
     @PostMapping(value = "/join")
     public Response<Object> join(
             @RequestBody @Valid JoinRequestDto joinRequestDto
@@ -97,6 +103,7 @@ public class UserController {
     // 내정보 수정
     // 내정보 확인
 
+    // 게시글 쓰기
     @PostMapping(value = "/save/post")
     public Response<Object> savePost(
             @RequestBody @Valid SavePostDto savePostDto,
@@ -110,6 +117,7 @@ public class UserController {
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
+    // 게시글 수정 (작성자 본인 수정필요)
     @PatchMapping(value = "/update/post")
     public Response<Object> updatePost(
             @RequestBody @Valid UpdatePostDto updatePostDto,
@@ -122,6 +130,7 @@ public class UserController {
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
+    // 게시글 삭제 (작성자 본인 수정필요)
     @DeleteMapping(value = "/post/{id}")
     public Response<Object> deletePost(
             @PathVariable Long postId,
@@ -134,6 +143,7 @@ public class UserController {
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
+    // 댓글 작성
     @PostMapping(value = "/write/comment")
     public Response<Object> writeComment(
             @RequestBody @Valid SaveCommentDto saveCommentDto,
@@ -147,6 +157,7 @@ public class UserController {
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
+    // 댓글 리스트
     @GetMapping(value = "/list/comment")
     public Response<Object> listComment(
             Long boardId
@@ -155,12 +166,14 @@ public class UserController {
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, commentList);
     }
 
+    // 댓글 삭제 (작성자 본인 수정필요)
     @DeleteMapping("/comment/{id}")
     private Response<Object> deleteComment(@PathVariable Long id){
         commentService.deleteComment(id);
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
+    // 댓글 수정
     @PatchMapping("/comment")
     private Response<Object> updateComment(@RequestBody SaveCommentDto saveCommentDto){
         commentService.updateComment(saveCommentDto);

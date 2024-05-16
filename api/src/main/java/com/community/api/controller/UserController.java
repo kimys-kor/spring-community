@@ -2,23 +2,23 @@ package com.community.api.controller;
 
 import com.community.api.common.exception.AuthenticationErrorCode;
 import com.community.api.model.Comment;
+import com.community.api.model.Message;
 import com.community.api.model.User;
 import com.community.api.model.dto.*;
-import com.community.api.service.CommentService;
-import com.community.api.service.PostService;
-import com.community.api.service.RefreshTokenService;
+import com.community.api.service.*;
 import com.community.api.common.jwt.JwtTokenProvider;
 import com.community.api.common.properties.JwtProperties;
 import com.community.api.common.random.StringSecureRandom;
 import com.community.api.common.response.Response;
 import com.community.api.common.response.ResultCode;
 import com.community.api.common.security.PrincipalDetails;
-import com.community.api.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,6 +40,7 @@ public class UserController {
     private final UserService userService;
     private final PostService postService;
     private final CommentService commentService;
+    private final MessageService messageService;
 
     @GetMapping(value = "/test")
     public Response<Object> test() {
@@ -167,7 +168,7 @@ public class UserController {
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, commentList);
     }
 
-    // 댓글 삭제 (작성자 본인 수정필요)
+    // 댓글 삭제
     @DeleteMapping("/comment/{commentId}")
     private Response<Object> deleteComment(
             @PathVariable Long commentId,
@@ -193,8 +194,51 @@ public class UserController {
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
+    // 메세지 보내기
+    @PostMapping("/send/message")
+    private Response<Object> sendMessage(
+            @RequestBody MessageDto messageDto,
+            Authentication authentication
+    ) {
+        PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+        String username = principalDetailis.getUsername();
 
+        Message message = messageService.sendMessage(username, messageDto);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, message);
+    }
 
+    // 메세지 리스트
+    @GetMapping("/get/messagelist")
+    private Response<Object> getMessageList(
+            Pageable pageable,
+            Authentication authentication
+    ) {
+        PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+        String username = principalDetailis.getUsername();
+
+        Page<ReadMessageListDto> messageList = messageService.getMessageList(username, pageable);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, messageList);
+    }
+
+    // 메세지 읽기
+    @GetMapping("/get/{messageId}")
+    private Response<Object> getMessageContent(
+            @PathVariable Long messageId
+    ) {
+        Message messageContent = messageService.getMessageContent(messageId);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, messageContent);
+    }
+
+    // 메세지 삭제
+    @DeleteMapping("/delete/message")
+    private Response<Object> deleteMessage(
+            @RequestBody List<Long> messageIdList
+    ) {
+        messageService.deleteMessage(messageIdList);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
+    }
+
+    
 
 
 }

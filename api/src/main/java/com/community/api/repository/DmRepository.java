@@ -1,10 +1,10 @@
 package com.community.api.repository;
 
-import com.community.api.model.Message;
+import com.community.api.model.Dm;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MessageRepository extends JpaRepository<Message, Long> {
+public interface DmRepository extends JpaRepository<Dm, Long> {
 
 }

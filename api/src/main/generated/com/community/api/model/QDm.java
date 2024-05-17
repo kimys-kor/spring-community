@@ -10,14 +10,14 @@ import com.querydsl.core.types.Path;
 
 
 /**
- * QMessage is a Querydsl query type for Message
+ * QDm is a Querydsl query type for Dm
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QMessage extends EntityPathBase<Message> {
+public class QDm extends EntityPathBase<Dm> {
 
-    private static final long serialVersionUID = 450358172L;
+    private static final long serialVersionUID = 1882814420L;
 
-    public static final QMessage message = new QMessage("message");
+    public static final QDm dm = new QDm("dm");
 
     public final com.community.api.model.base.QBaseTime _super = new com.community.api.model.base.QBaseTime(this);
 
@@ -39,16 +39,16 @@ public class QMessage extends EntityPathBase<Message> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedDt = _super.updatedDt;
 
-    public QMessage(String variable) {
-        super(Message.class, forVariable(variable));
+    public QDm(String variable) {
+        super(Dm.class, forVariable(variable));
     }
 
-    public QMessage(Path<? extends Message> path) {
+    public QDm(Path<? extends Dm> path) {
         super(path.getType(), path.getMetadata());
     }
 
-    public QMessage(PathMetadata metadata) {
-        super(Message.class, metadata);
+    public QDm(PathMetadata metadata) {
+        super(Dm.class, metadata);
     }
 
 }

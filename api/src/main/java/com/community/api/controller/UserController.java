@@ -1,9 +1,6 @@
 package com.community.api.controller;
 
-import com.community.api.common.exception.AuthenticationErrorCode;
-import com.community.api.model.Comment;
-import com.community.api.model.Message;
-import com.community.api.model.User;
+import com.community.api.model.Dm;
 import com.community.api.model.dto.*;
 import com.community.api.service.*;
 import com.community.api.common.jwt.JwtTokenProvider;
@@ -19,7 +16,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -40,7 +36,7 @@ public class UserController {
     private final UserService userService;
     private final PostService postService;
     private final CommentService commentService;
-    private final MessageService messageService;
+    private final DmService dmService;
 
     @GetMapping(value = "/test")
     public Response<Object> test() {
@@ -195,46 +191,46 @@ public class UserController {
     }
 
     // 메세지 보내기
-    @PostMapping("/send/message")
-    private Response<Object> sendMessage(
-            @RequestBody MessageDto messageDto,
+    @PostMapping("/send/dm")
+    private Response<Object> sendDm(
+            @RequestBody DmDto dmDto,
             Authentication authentication
     ) {
         PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
         String username = principalDetailis.getUsername();
 
-        Message message = messageService.sendMessage(username, messageDto);
-        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, message);
+        Dm dm = dmService.sendDm(username, dmDto);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, dm);
     }
 
     // 메세지 리스트
-    @GetMapping("/get/messagelist")
-    private Response<Object> getMessageList(
+    @GetMapping("/get/dmlist")
+    private Response<Object> getDmList(
             Pageable pageable,
             Authentication authentication
     ) {
         PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
         String username = principalDetailis.getUsername();
 
-        Page<ReadMessageListDto> messageList = messageService.getMessageList(username, pageable);
+        Page<ReadDmListDto> messageList = dmService.getDmList(username, pageable);
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, messageList);
     }
 
     // 메세지 읽기
-    @GetMapping("/get/{messageId}")
-    private Response<Object> getMessageContent(
-            @PathVariable Long messageId
+    @GetMapping("/get/{dmId}")
+    private Response<Object> getDmContent(
+            @PathVariable Long dmId
     ) {
-        Message messageContent = messageService.getMessageContent(messageId);
-        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, messageContent);
+        Dm dmContent = dmService.getDmContent(dmId);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, dmContent);
     }
 
     // 메세지 삭제
-    @DeleteMapping("/delete/message")
-    private Response<Object> deleteMessage(
-            @RequestBody List<Long> messageIdList
+    @PutMapping("/delete/dm")
+    private Response<Object> deleteDm(
+            @RequestBody List<Long> dmIdList
     ) {
-        messageService.deleteMessage(messageIdList);
+        dmService.deleteMessage(dmIdList);
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 

@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
 @Builder
-public record MessageDto(
+public record DmDto(
         Long id,
         @NotBlank(message = "제목은 필수입니다.")
         String title,

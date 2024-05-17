@@ -3,10 +3,6 @@ key:
   imgPath: /C:/Users/demisoda/imgPath
 
 spring:
-  data:
-    redis:
-      host: localhost
-      port: 6379
 
   config:
     import:

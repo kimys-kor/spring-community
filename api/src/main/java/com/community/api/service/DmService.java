@@ -61,9 +61,7 @@ public class DmService {
     }
 
     public void deleteMessage(List<Long> idList) {
-        for (Long id : idList) {
-            dmRepository.deleteById(id);
-        }
+        dmRepository.deleteAllByIds(idList);
     }
 
 }

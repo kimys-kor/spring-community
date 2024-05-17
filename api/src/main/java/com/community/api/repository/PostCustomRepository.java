@@ -5,6 +5,7 @@ import com.community.api.model.dto.ReadPostContentDto;
 import com.community.api.model.dto.ReadPostListDto;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -23,7 +25,7 @@ public class PostCustomRepository {
     @PersistenceContext
     private EntityManager em;
 
-    public Page<ReadPostListDto> getList(int typ, Pageable pageable) {
+    public Page<ReadPostListDto> getList(int typ, String keyword, Pageable pageable) {
 
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
@@ -42,7 +44,8 @@ public class PostCustomRepository {
                 .from(post)
                 .where(
                         post.postType.eq(typ),
-                        post.isDeleted.eq(false)
+                        post.isDeleted.eq(false),
+                        keywordFilter(keyword)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -107,7 +110,12 @@ public class PostCustomRepository {
         return content;
     }
 
-
+    private BooleanExpression keywordFilter(String keyword) {
+        if (StringUtils.isEmpty(keyword)) {
+            return null;
+        }
+        return post.title.contains(keyword).or(post.content.contains(keyword)).or(post.username.contains(keyword));
+    }
 
 
 }

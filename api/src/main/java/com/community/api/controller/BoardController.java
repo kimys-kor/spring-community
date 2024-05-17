@@ -22,9 +22,10 @@ public class BoardController {
     @GetMapping(value = "/list")
     public Response<Object> BoardList(
             int typ,
+            String keyword,
             Pageable pageable
     ) {
-        Page<ReadPostListDto> list = postService.getList(typ, pageable);
+        Page<ReadPostListDto> list = postService.getList(typ, keyword, pageable);
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, list);
     }
 

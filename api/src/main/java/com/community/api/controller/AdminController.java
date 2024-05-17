@@ -11,6 +11,7 @@ import com.community.api.model.BlockedIp;
 import com.community.api.model.dto.LoginRequestDto;
 import com.community.api.model.dto.SaveIpDto;
 import com.community.api.service.IpService;
+import com.community.api.service.PostService;
 import com.community.api.service.RefreshTokenService;
 import com.community.api.service.UserService;
 
@@ -38,6 +39,7 @@ public class AdminController {
     private final JwtProperties jwtProperties;
     private final AuthenticationManager authenticationManager;
     private final IpService ipService;
+    private final PostService postService;
 
 
     @GetMapping(value = "/test")
@@ -157,6 +159,14 @@ public class AdminController {
     }
 
 
+    // 게시글 다중 삭제
+    @PutMapping(value = "/delete/postlist")
+    public Response<Object> deletePostList(
+        List<Long> postList
+    ) {
+        postService.deletePostList(postList);
+        return new Response(ResultCode.DATA_NORMAL_PROCESSING);
+    }
 
 
 

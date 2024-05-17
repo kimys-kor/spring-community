@@ -34,8 +34,8 @@ public class PostService {
         private final UserRepository userRepository;
 
 
-        public Page<ReadPostListDto> getList(int typ, Pageable pageable) {
-                return postCustomRepository.getList(typ, pageable);
+        public Page<ReadPostListDto> getList(int typ, String keyword, Pageable pageable) {
+                return postCustomRepository.getList(typ, keyword, pageable);
         }
 
         public ReadPostContentDto getContent(Long id) {
@@ -99,4 +99,7 @@ public class PostService {
                 postRepository.delete(post);
         }
 
+        public void deletePostList(List<Long> postList) {
+                postRepository.deleteAllByIds(postList);
+        }
 }

@@ -16,15 +16,11 @@ public class PointHistory extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long ordersId;
+    private Long userId;
 
-    private Long riderId;
+    private String pointContent;
 
-    private Double point;
+    private int point;
 
-    public PointHistory(Long ordersId, Long riderId, Double point) {
-        this.ordersId = ordersId;
-        this.riderId = riderId;
-        this.point = point;
-    }
+
 }

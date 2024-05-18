@@ -149,15 +149,6 @@ public class AdminController {
         return new Response(ResultCode.DATA_NORMAL_PROCESSING,tempPassword);
     }
 
-    // 유저 정보 업데이트
-    @PostMapping(value = "/user/update/info")
-    public Response<Object> updateUserInfo(@RequestParam Long userId,
-                                           @RequestParam String userNickname,
-                                           @RequestParam String userGrade) {
-        userService.updateInfo(userId, userNickname, userGrade);
-        return new Response(ResultCode.DATA_NORMAL_PROCESSING);
-    }
-
 
     // 게시글 다중 삭제
     @PutMapping(value = "/delete/postlist")

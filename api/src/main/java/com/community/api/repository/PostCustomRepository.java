@@ -47,6 +47,7 @@ public class PostCustomRepository {
                         post.isDeleted.eq(false),
                         keywordFilter(keyword)
                 )
+                .orderBy(post.createdDt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();

@@ -97,8 +97,22 @@ public class UserController {
     }
 
     // 아이디, 비밀번호 찾기 (문자인증)
+
+
     // 내정보 수정
-    // 내정보 확인
+    @PatchMapping(value = "/update/myinfo")
+    public Response<Object> updateMyInfo(
+            @RequestBody UserUpdateDto userUpdateDto,
+            Authentication authentication
+    ) {
+        PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+        String username = principalDetailis.getUsername();
+
+        userService.updateMyInfo(username, userUpdateDto);
+
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
+    }
+
 
     // 게시글 쓰기
     @PostMapping(value = "/save/post")

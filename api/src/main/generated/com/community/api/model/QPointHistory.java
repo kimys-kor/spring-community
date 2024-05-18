@@ -26,14 +26,14 @@ public class QPointHistory extends EntityPathBase<PointHistory> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final NumberPath<Long> ordersId = createNumber("ordersId", Long.class);
+    public final NumberPath<Integer> point = createNumber("point", Integer.class);
 
-    public final NumberPath<Double> point = createNumber("point", Double.class);
-
-    public final NumberPath<Long> riderId = createNumber("riderId", Long.class);
+    public final StringPath pointContent = createString("pointContent");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedDt = _super.updatedDt;
+
+    public final NumberPath<Long> userId = createNumber("userId", Long.class);
 
     public QPointHistory(String variable) {
         super(PointHistory.class, forVariable(variable));

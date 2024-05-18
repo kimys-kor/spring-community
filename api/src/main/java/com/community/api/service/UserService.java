@@ -6,6 +6,7 @@ import com.community.api.model.base.UserRole;
 import com.community.api.model.dto.UserDetailDto;
 import com.community.api.model.dto.JoinRequestDto;
 import com.community.api.model.dto.UserReadDto;
+import com.community.api.model.dto.UserUpdateDto;
 import com.community.api.repository.UserCustomRepository;
 import com.community.api.common.exception.inteface.CustomException;
 import com.community.api.common.exception.AuthenticationErrorCode;
@@ -143,16 +144,21 @@ public class UserService {
         em.clear();
     }
 
-    // 유저 정보 수정
-    @Transactional
-    public void updateInfo(Long userId, String userNickname, String userGrade) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("없는 회원입니다."));
-        UserGrade grade = UserGrade.of(userGrade);
 
-        user.setNickname(userNickname);
-        user.setGrade(grade);
+    // 유저 내정보 수정
+    @Transactional
+    public void updateMyInfo(String username, UserUpdateDto userUpdateDto) {
+        System.out.println(userUpdateDto.getFullName());
+        System.out.println(userUpdateDto.getNickname());
+        System.out.println(userUpdateDto.getPhoneNum());
+
+
+        User user = userRepository.findByUsername(username).orElseThrow();
+        user.setPassword(passwordEncoder.encode(userUpdateDto.getPassword()));
+        user.setPhoneNum(userUpdateDto.getPhoneNum());
+        user.setFullName(userUpdateDto.getFullName());
+        user.setNickname(userUpdateDto.getNickname());
         em.flush();
         em.clear();
-
     }
 }

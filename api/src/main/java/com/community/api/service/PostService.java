@@ -65,14 +65,7 @@ public class PostService {
                         dto.setLiked(false);
                 } else {
                         Optional<LikePost> likePost = likePostRepository.findByUsernameAndPostIdEquals(username, post.getId());
-                        if (likePost.isEmpty()) {
-                                System.out.println("일일일");
-                                dto.setLiked(false);
-                        } else {
-                                System.out.println("이이이");
-
-                                dto.setLiked(true);
-                        }
+                        dto.setLiked(likePost.isPresent());
                 }
                 return dto;
         }

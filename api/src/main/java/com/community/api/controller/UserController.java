@@ -1,5 +1,6 @@
 package com.community.api.controller;
 
+import com.community.api.model.Comment;
 import com.community.api.model.Dm;
 import com.community.api.model.dto.*;
 import com.community.api.service.*;
@@ -192,6 +193,14 @@ public class UserController {
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, commentList);
     }
 
+    @GetMapping(value = "/search/comment")
+    public Response<Object> searchComment(
+            String keyword
+    ) {
+        List<ReadSearchCommentDto> comments = commentService.searchComment(keyword);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, comments);
+    }
+
     // 댓글 삭제
     @DeleteMapping("/comment/{commentId}")
     private Response<Object> deleteComment(
@@ -261,6 +270,8 @@ public class UserController {
         dmService.deleteMessage(dmIdList);
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
+
+
 
     
 

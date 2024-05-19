@@ -9,6 +9,7 @@ import com.community.api.model.Post;
 import com.community.api.model.User;
 import com.community.api.model.base.UserRole;
 import com.community.api.model.dto.ReadCommentDto;
+import com.community.api.model.dto.ReadSearchCommentDto;
 import com.community.api.model.dto.SaveCommentDto;
 import com.community.api.repository.CommentCustomRepository;
 import com.community.api.repository.CommentRepository;
@@ -73,6 +74,10 @@ public class CommentService {
 
     public List<ReadCommentDto> findCommentsByPostId(Long boardId) {
         return convertNestedStructure(commentCustomRepository.findByboardId(boardId));
+    }
+
+    public List<ReadSearchCommentDto> searchComment(String keyword) {
+        return commentCustomRepository.searchComment(keyword);
     }
 
     public void deleteComment(String username, Long commentId) {

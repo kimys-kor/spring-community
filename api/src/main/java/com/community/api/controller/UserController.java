@@ -35,6 +35,7 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final PostService postService;
+    private final LikePostService likePostService;
     private final CommentService commentService;
     private final DmService dmService;
 
@@ -138,6 +139,19 @@ public class UserController {
         String username = principalDetailis.getUsername();
 
         postService.updatePost(username, updatePostDto);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
+    }
+
+    // 게시글 좋아요
+    @PatchMapping(value = "/like/post")
+    public Response<Object> updateLikePost(
+            @RequestParam Long boardId,
+            Authentication authentication
+    ) {
+        PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+        String username = principalDetailis.getUsername();
+
+        likePostService.likePost(username, boardId);
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 

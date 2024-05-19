@@ -13,4 +13,5 @@ public class ReadPostContentDto {
     private int hate;
     private int likes;
     private int replyNum;
+    private boolean isLiked;
 }

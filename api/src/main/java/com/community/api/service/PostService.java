@@ -3,6 +3,7 @@ package com.community.api.service;
 import com.community.api.common.exception.AuthenticationErrorCode;
 import com.community.api.common.exception.BoardErrorCode;
 import com.community.api.common.exception.CommentErrorCode;
+import com.community.api.model.LikePost;
 import com.community.api.model.Post;
 import com.community.api.model.User;
 import com.community.api.model.base.UserRole;
@@ -32,6 +33,7 @@ public class PostService {
         private final PostCustomRepository postCustomRepository;
         private final PostRepository postRepository;
         private final UserRepository userRepository;
+        private final LikePostRepository likePostRepository;
 
 
         public Page<ReadPostListDto> getList(int typ, String keyword, Pageable pageable) {
@@ -39,26 +41,39 @@ public class PostService {
         }
 
         @Transactional
-        public ReadPostContentDto getContent(Long id) {
+        public ReadPostContentDto getContent(String username, Long id) {
                 Post post = postRepository.findById(id).orElseThrow(BoardErrorCode.POST_NOT_EXIST::defaultException);
                 post.setHit(post.getHit()+1);
                 em.flush();
                 em.clear();
-                return mapToDTO(post);
+                return mapToDTO(username, post);
         }
 
 
-        private ReadPostContentDto mapToDTO(Post post) {
+        private ReadPostContentDto mapToDTO(String username, Post post) {
                 ReadPostContentDto dto = new ReadPostContentDto();
                 dto.setId(post.getId());
-                dto.setUsername(post.getUsername()); // Assuming Post has a User field with getUsername method
-                dto.setNickname(post.getNickname()); // Assuming Post has a User field with getNickname method
+                dto.setUsername(post.getUsername());
+                dto.setNickname(post.getNickname());
                 dto.setUserIp(post.getUserIp());
                 dto.setTitle(post.getTitle());
                 dto.setHit(post.getHit());
                 dto.setHate(post.getHate());
                 dto.setLikes(post.getLikes());
-                dto.setReplyNum(post.getReplyNum()); // Assuming commentList is the reply list
+                dto.setReplyNum(post.getReplyNum());
+                if (username == null) {
+                        dto.setLiked(false);
+                } else {
+                        Optional<LikePost> likePost = likePostRepository.findByUsernameAndPostIdEquals(username, post.getId());
+                        if (likePost.isEmpty()) {
+                                System.out.println("일일일");
+                                dto.setLiked(false);
+                        } else {
+                                System.out.println("이이이");
+
+                                dto.setLiked(true);
+                        }
+                }
                 return dto;
         }
 

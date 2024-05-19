@@ -2,6 +2,7 @@ package com.community.api.controller;
 
 import com.community.api.common.response.Response;
 import com.community.api.common.response.ResultCode;
+import com.community.api.common.security.PrincipalDetails;
 import com.community.api.model.Post;
 import com.community.api.model.dto.ReadPostContentDto;
 import com.community.api.model.dto.ReadPostListDto;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,9 +39,17 @@ public class BoardController {
     // 게시글 상세
     @GetMapping(value = "/content")
     public Response<Object> BoardContent(
-            Long boardId
+            Long boardId,
+            Authentication authentication
     ) {
-        ReadPostContentDto post = postService.getContent(boardId);
+        String username = null;
+        if (authentication != null) {
+            PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+            username = principalDetailis.getUsername();
+        }
+
+
+        ReadPostContentDto post = postService.getContent(username, boardId);
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, post);
     }
 }

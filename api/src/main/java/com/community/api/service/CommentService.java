@@ -37,6 +37,7 @@ public class CommentService {
     private final UserRepository userRepository;
 
 
+    @Transactional
     public void saveComment(String remoteAddr, String username, SaveCommentDto saveCommentDto) {
         
         // 대댓글 까지만 허용
@@ -48,6 +49,7 @@ public class CommentService {
         }
         
         Post post = postRepository.findById(saveCommentDto.boardId()).orElseThrow(BoardErrorCode.POST_NOT_EXIST::defaultException);
+
         User user = userRepository.findByUsername(username).orElseThrow(AuthenticationErrorCode.USER_NOT_EXIST::defaultException);
 
             Comment comment = Comment.builder()
@@ -64,6 +66,9 @@ public class CommentService {
                     )
                     .build();
             commentRepository.save(comment);
+            post.setReplyNum(post.getReplyNum()+1);
+            em.flush();
+            em.clear();
     }
 
     public List<ReadCommentDto> findCommentsByPostId(Long boardId) {
@@ -84,6 +89,7 @@ public class CommentService {
             commentRepository.delete(getDeletableAncestorComment(comment));
         }
     }
+
 
     private Comment getDeletableAncestorComment(Comment comment) {
         Comment parent = comment.getParent();

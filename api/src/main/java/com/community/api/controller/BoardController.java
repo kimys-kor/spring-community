@@ -2,6 +2,8 @@ package com.community.api.controller;
 
 import com.community.api.common.response.Response;
 import com.community.api.common.response.ResultCode;
+import com.community.api.model.Post;
+import com.community.api.model.dto.ReadPostContentDto;
 import com.community.api.model.dto.ReadPostListDto;
 import com.community.api.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +39,7 @@ public class BoardController {
     public Response<Object> BoardContent(
             Long boardId
     ) {
-        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, postService.getContent(boardId));
+        ReadPostContentDto post = postService.getContent(boardId);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, post);
     }
 }

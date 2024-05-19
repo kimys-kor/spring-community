@@ -38,9 +38,30 @@ public class PostService {
                 return postCustomRepository.getList(typ, keyword, pageable);
         }
 
+        @Transactional
         public ReadPostContentDto getContent(Long id) {
-                return postCustomRepository.getContent(id);
+                Post post = postRepository.findById(id).orElseThrow(BoardErrorCode.POST_NOT_EXIST::defaultException);
+                post.setHit(post.getHit()+1);
+                em.flush();
+                em.clear();
+                return mapToDTO(post);
         }
+
+
+        private ReadPostContentDto mapToDTO(Post post) {
+                ReadPostContentDto dto = new ReadPostContentDto();
+                dto.setId(post.getId());
+                dto.setUsername(post.getUsername()); // Assuming Post has a User field with getUsername method
+                dto.setNickname(post.getNickname()); // Assuming Post has a User field with getNickname method
+                dto.setUserIp(post.getUserIp());
+                dto.setTitle(post.getTitle());
+                dto.setHit(post.getHit());
+                dto.setHate(post.getHate());
+                dto.setLikes(post.getLikes());
+                dto.setReplyNum(post.getReplyNum()); // Assuming commentList is the reply list
+                return dto;
+        }
+
 
         public List<ReadPostListDto> getNoticeList(int typ) {
                 return postCustomRepository.getNoticeList(typ);

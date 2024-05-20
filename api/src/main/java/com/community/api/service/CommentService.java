@@ -80,6 +80,7 @@ public class CommentService {
         return commentCustomRepository.searchComment(keyword);
     }
 
+    @Transactional
     public void deleteComment(String username, Long commentId) {
         Comment comment = commentRepository.findCommentByIdWithParent(commentId);
         User user = userRepository.findByUsername(username).orElseThrow(AuthenticationErrorCode.USER_NOT_EXIST::defaultException);
@@ -89,9 +90,14 @@ public class CommentService {
         }
 
         if(comment.getChildren().size() != 0) {
-            comment.changeDeletedStatus(true);
+            comment.setDeleted(true);
+            em.flush();
+            em.clear();
+            System.out.println("1111d");
         } else {
             commentRepository.delete(getDeletableAncestorComment(comment));
+            System.out.println("2222d");
+
         }
     }
 

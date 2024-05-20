@@ -8,12 +8,11 @@ import com.community.api.common.response.ResultCode;
 import com.community.api.common.security.PrincipalDetails;
 import com.community.api.model.ApprovedIp;
 import com.community.api.model.BlockedIp;
+import com.community.api.model.dto.DeleteCommentListDto;
+import com.community.api.model.dto.DeletePostListDto;
 import com.community.api.model.dto.LoginRequestDto;
 import com.community.api.model.dto.SaveIpDto;
-import com.community.api.service.IpService;
-import com.community.api.service.PostService;
-import com.community.api.service.RefreshTokenService;
-import com.community.api.service.UserService;
+import com.community.api.service.*;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -40,6 +39,7 @@ public class AdminController {
     private final AuthenticationManager authenticationManager;
     private final IpService ipService;
     private final PostService postService;
+    private final CommentService commentService;
 
 
     @GetMapping(value = "/test")
@@ -153,9 +153,30 @@ public class AdminController {
     // 게시글 다중 삭제
     @PutMapping(value = "/delete/postlist")
     public Response<Object> deletePostList(
-        List<Long> postList
+            @RequestBody DeletePostListDto dto,
+            Authentication authentication
+            ) {
+        PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+        String username = principalDetailis.getUsername();
+
+        for (Long id : dto.ids) {
+            postService.deletePost(username, id);
+        }
+        return new Response(ResultCode.DATA_NORMAL_PROCESSING);
+    }
+
+    // 댓글 다중 삭제
+    @PutMapping(value = "/delete/commentlist")
+    public Response<Object> deleteCommentList(
+            @RequestBody DeleteCommentListDto dto,
+            Authentication authentication
     ) {
-        postService.deletePostList(postList);
+        PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+        String username = principalDetailis.getUsername();
+
+        for (Long id : dto.ids) {
+            commentService.deleteComment(username, id);
+        }
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 

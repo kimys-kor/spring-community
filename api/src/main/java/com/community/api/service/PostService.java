@@ -128,7 +128,4 @@ public class PostService {
                 postRepository.delete(post);
         }
 
-        public void deletePostList(List<Long> postList) {
-                postRepository.deleteAllByIds(postList);
-        }
 }

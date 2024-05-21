@@ -30,12 +30,8 @@ public class UserPathIntercepter implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
         String ipAddress = request.getRemoteAddr();
-        if (!ipService.findIp("blocked", ipAddress)) {
-            return false;
-        }
-        return true;
+        return ipService.findIp("blocked", ipAddress);
     }
 
     @Override

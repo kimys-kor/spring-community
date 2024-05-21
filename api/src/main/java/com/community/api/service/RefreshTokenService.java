@@ -45,11 +45,11 @@ public class RefreshTokenService {
         RefreshTokenEntity tokenEntity = refreshTokenRepository.findById(oldRefreshToken).orElseThrow(
                 AuthenticationErrorCode.UNKNOWN_REFRESH_TOKEN::defaultException);
 
-        String email = tokenEntity.getUsername();
-        Long userId = userRepository.findByUsername(email).orElseThrow(
+        String username = tokenEntity.getUsername();
+        Long userId = userRepository.findByUsername(username).orElseThrow(
                 AuthenticationErrorCode.AUTHENTICATION_FAILED::defaultException).getId();
 
-        String accessToken = jwtTokenProvider.generateToken(userId, email);
+        String accessToken = jwtTokenProvider.generateToken(userId, username);
 
         return accessToken;
     }

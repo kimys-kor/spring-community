@@ -21,6 +21,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.community.api.model.QUser.user;
+
+
 
 @Repository
 public class UserCustomRepository {
@@ -34,29 +37,29 @@ public class UserCustomRepository {
 
         StringExpression cratedDt = Expressions.stringTemplate(
                 "DATE_FORMAT({0}, {1})"
-                , QUser.user.createdDt
+                , user.createdDt
                 , ConstantImpl.create("%Y.%m.%d %H:%i:%s")).as("createdDt");
 
         StringExpression lastLogin = Expressions.stringTemplate(
                 "DATE_FORMAT({0}, {1})"
-                , QUser.user.lastLogin
+                , user.lastLogin
                 , ConstantImpl.create("%Y.%m.%d %H:%i:%s")).as("lastLogin");
 
 
         QueryResults<UserReadDto> results = queryFactory.select(Projections.fields(UserReadDto.class,
-                        QUser.user.status,
-                        QUser.user.id,
-                        QUser.user.phoneNum,
-                        QUser.user.username,
-                        QUser.user.nickname,
+                        user.status,
+                        user.id,
+                        user.phoneNum,
+                        user.username,
+                        user.nickname,
                         cratedDt,
                         lastLogin,
-                        QUser.user.point
+                        user.point
                 ))
-                .from(QUser.user)
+                .from(user)
                 .where(
-                        QUser.user.role.eq(UserRole.ROLE_USER),
-                        QUser.user.status.ne(UserStatus.BLOCKED)
+                        user.role.eq(UserRole.ROLE_USER),
+                        user.status.eq(UserStatus.NORMAL)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

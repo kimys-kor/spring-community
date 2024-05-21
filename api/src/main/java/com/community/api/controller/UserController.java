@@ -29,11 +29,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final StringSecureRandom stringSecureRandom;
-    private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenService refreshTokenService;
     private final JwtProperties jwtProperties;
-    private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final PostService postService;
     private final LikePostService likePostService;
@@ -55,50 +52,6 @@ public class UserController {
         response.addHeader(jwtProperties.headerString(), "Bearer "+accessToken);
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
-
-    // 로그인
-    @PostMapping(value = "/login")
-    public Response<Object> login(
-            @RequestBody @Valid LoginRequestDto loginRequestDto,
-            HttpServletResponse response
-    ) {
-        
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken( 
-                        loginRequestDto.username(),
-                        loginRequestDto.password());
-
-        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-        PrincipalDetails principalDetailis = (PrincipalDetails) authenticate.getPrincipal();
-
-        // access token 헤더 추가
-        String jwtToken = jwtTokenProvider.generateToken(principalDetailis.getUser().getId(), principalDetailis.getUser().getUsername());
-        response.addHeader(jwtProperties.headerString(), "Bearer "+jwtToken);
-
-        // refresh token 쿠키 추가
-        String refreshToken = stringSecureRandom.next(20);
-        Cookie cookie = new Cookie("refresh_token", refreshToken);
-        cookie.setMaxAge(2_592_000);
-        cookie.setDomain("");
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        response.addCookie(cookie);
-
-        refreshTokenService.save(principalDetailis.getUser().getUsername(), refreshToken);
-
-        return new Response(ResultCode.DATA_NORMAL_PROCESSING);
-    }
-
-    // 회원가입
-    @PostMapping(value = "/join")
-    public Response<Object> join(
-            @RequestBody @Valid JoinRequestDto joinRequestDto
-    ){
-        userService.join(joinRequestDto);
-        return new Response(ResultCode.DATA_NORMAL_PROCESSING);
-    }
-
-    // 아이디, 비밀번호 찾기 (문자인증)
 
 
     // 내정보 수정
@@ -184,22 +137,7 @@ public class UserController {
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
-    // 댓글 리스트
-    @GetMapping(value = "/list/comment")
-    public Response<Object> listComment(
-            Long boardId
-    ) {
-        List<ReadCommentDto> commentList = commentService.findCommentsByPostId(boardId);
-        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, commentList);
-    }
 
-    @GetMapping(value = "/search/comment")
-    public Response<Object> searchComment(
-            String keyword
-    ) {
-        List<ReadSearchCommentDto> comments = commentService.searchComment(keyword);
-        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, comments);
-    }
 
     // 댓글 삭제
     @DeleteMapping("/comment/{commentId}")

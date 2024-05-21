@@ -3,6 +3,7 @@ package com.community.api.service;
 import com.community.api.model.User;
 import com.community.api.model.base.UserGrade;
 import com.community.api.model.base.UserRole;
+import com.community.api.model.base.UserStatus;
 import com.community.api.model.dto.UserDetailDto;
 import com.community.api.model.dto.JoinRequestDto;
 import com.community.api.model.dto.UserReadDto;
@@ -50,14 +51,9 @@ public class UserService {
     }
 
     // 관리자 페이지 유저 리스트
-    public Map<String, Object> findAll(Pageable pageable) {
+    public Page<UserReadDto> findAll(Pageable pageable) {
         Page<UserReadDto> pageObject = userCustomRepository.findAll(pageable);
-
-        Map<String, Object> result = new ConcurrentHashMap<>();
-        result.put("users",pageObject.getContent());
-        result.put("totalItem", pageObject.getTotalElements());
-
-        return result;
+        return pageObject;
     }
 
     // 관리자 페이지 유저 상세
@@ -77,6 +73,7 @@ public class UserService {
         }
 
         User user = User.builder()
+                .status(UserStatus.NORMAL)
                 .username(joinRequestDto.username())
                 .password(passwordEncoder.encode(joinRequestDto.password()))
                 .fullName(joinRequestDto.fullName())
@@ -160,5 +157,21 @@ public class UserService {
         user.setNickname(userUpdateDto.getNickname());
         em.flush();
         em.clear();
+    }
+
+    @Transactional
+    public void setBlock(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(AuthenticationErrorCode.USER_NOT_EXIST::defaultException);
+        if (user.getStatus().equals(UserStatus.DELETED)) {
+            throw AuthenticationErrorCode.USER_NOT_EXIST.defaultException();
+        } else if (user.getStatus().equals(UserStatus.BLOCKED)) {
+            user.setStatus(UserStatus.NORMAL);
+            em.flush();
+            em.clear();
+        } else {
+            user.setStatus(UserStatus.BLOCKED);
+            em.flush();
+            em.clear();
+        }
     }
 }

@@ -8,15 +8,13 @@ import com.community.api.common.response.ResultCode;
 import com.community.api.common.security.PrincipalDetails;
 import com.community.api.model.ApprovedIp;
 import com.community.api.model.BlockedIp;
-import com.community.api.model.dto.DeleteCommentListDto;
-import com.community.api.model.dto.DeletePostListDto;
-import com.community.api.model.dto.LoginRequestDto;
-import com.community.api.model.dto.SaveIpDto;
+import com.community.api.model.dto.*;
 import com.community.api.service.*;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -105,6 +103,7 @@ public class AdminController {
         return new Response(ResultCode.DATA_NORMAL_PROCESSING, allApprovedIp);
     }
 
+    // ip 삭제
     @DeleteMapping(value = "/delete/ip")
     public Response<Object> deleteIp(
         String type,
@@ -114,14 +113,12 @@ public class AdminController {
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
-    // 게시글
-
 
     // 유저 리스트
     @GetMapping(value = "/user/findall")
     public Response<Object> findAllUser(Pageable pageable
     ) {
-        Map<String, Object> all = userService.findAll(pageable);
+        Page<UserReadDto> all = userService.findAll(pageable);
         return new Response(ResultCode.DATA_NORMAL_PROCESSING, all);
     }
 
@@ -147,6 +144,15 @@ public class AdminController {
     public Response<Object> userPasswordReset(@RequestParam Long userId) {
         String tempPassword = userService.updatePassword(userId);
         return new Response(ResultCode.DATA_NORMAL_PROCESSING,tempPassword);
+    }
+
+    // 유저 접근차단,해제
+    @PatchMapping(value = "/set/block/{username}")
+    public Response<Object> setBlock(
+            @PathVariable String username
+    ) {
+        userService.setBlock(username);
+        return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
 
@@ -180,6 +186,6 @@ public class AdminController {
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
-
+    // FIXME 포인트 히스토리, 포인트 쌓이는 기능 추가
 
 }

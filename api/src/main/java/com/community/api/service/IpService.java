@@ -56,11 +56,11 @@ public class IpService {
                 return true;
             }
         } else {
-            Optional<ApprovedIp>  approvedIp = approvedIpRepository.findByIpAddressEquals(ipAddress);
-            if (approvedIp.isEmpty()) {
-                return false;
-            } else {
+            Optional<BlockedIp>  blockedIp = blockedIpRepository.findByIpAddressEquals(ipAddress);
+            if (blockedIp.isEmpty()) {
                 return true;
+            } else {
+                return false;
             }
         }
     }

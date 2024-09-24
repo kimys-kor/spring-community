@@ -25,21 +25,7 @@ public class GuestPathIntercepter implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        //FIXME 로그인이 하나로 통합되었기 때문에 role에 따라서 blocked, approved 수정해주어야함
-        String Authorization = request.getHeader(jwtProperties.headerString());
-        String token = Authorization.replace("Bearer ", "");
-        String username = jwtTokenProvider.resolveToken(token);
-        User user = userService.findByUsername(username);
-
-        if (user.getRole().equals(UserRole.ROLE_USER)) {
-            String ipAddress = request.getRemoteAddr();
-            return ipService.findIp("blocked", ipAddress);
-        } else {
-            String ipAddress = request.getRemoteAddr();
-            return ipService.findIp("approved", ipAddress);
-        }
-
-
+       return true;
     }
 
     @Override

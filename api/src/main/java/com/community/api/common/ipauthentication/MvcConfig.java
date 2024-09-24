@@ -12,7 +12,7 @@ public class MvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(adminPathIntercepter()).addPathPatterns("/admin/**");
         registry.addInterceptor(userPathIntercepter()).addPathPatterns("/user/**");
-        registry.addInterceptor(guestPathIntercepter()).addPathPatterns("/guest/**");
+//        registry.addInterceptor(guestPathIntercepter()).addPathPatterns("/guest/**");
     }
 
     @Bean

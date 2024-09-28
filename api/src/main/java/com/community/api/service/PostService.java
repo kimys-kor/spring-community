@@ -57,6 +57,7 @@ public class PostService {
                 dto.setNickname(post.getNickname());
                 dto.setUserIp(post.getUserIp());
                 dto.setTitle(post.getTitle());
+                dto.setContent(post.getContent());
                 dto.setHit(post.getHit());
                 dto.setHate(post.getHate());
                 dto.setLikes(post.getLikes());

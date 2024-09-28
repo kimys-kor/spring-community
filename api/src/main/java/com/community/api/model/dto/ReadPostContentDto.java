@@ -9,6 +9,7 @@ public class ReadPostContentDto {
     private String nickname;
     private String userIp;
     private String title;
+    private String content;
     private int hit;
     private int hate;
     private int likes;

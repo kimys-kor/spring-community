@@ -2,6 +2,7 @@ package com.community.api.controller;
 
 import com.community.api.model.Comment;
 import com.community.api.model.Dm;
+import com.community.api.model.User;
 import com.community.api.model.dto.*;
 import com.community.api.service.*;
 import com.community.api.common.jwt.JwtTokenProvider;
@@ -51,6 +52,19 @@ public class UserController {
         String accessToken = refreshTokenService.refresh(request);
         response.addHeader(jwtProperties.headerString(), "Bearer "+accessToken);
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
+    }
+
+    // 내정보 조회
+    @GetMapping(value = "/my-info")
+    public Response<Object> viewMyinfo(
+            Authentication authentication
+    ) {
+        PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+        String username = principalDetailis.getUsername();
+
+        User byUsername = userService.findByUsername(username);
+
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, byUsername);
     }
 
 

@@ -42,6 +42,10 @@ public class GuestController {
     private final AuthenticationManager authenticationManager;
     private final JwtProperties jwtProperties;
 
+    @GetMapping(value = "/test")
+    public Response<Object> test() {
+        return new Response(ResultCode.DATA_NORMAL_PROCESSING);
+    }
 
     // 로그인
     @PostMapping(value = "/login")

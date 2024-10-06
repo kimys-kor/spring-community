@@ -54,6 +54,13 @@ public class UserController {
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
+    // 로그아웃
+    @GetMapping("/logout")
+    public Response<Object> logout( HttpServletRequest request,
+                          HttpServletResponse response) {
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
+    }
+
     // 내정보 조회
     @GetMapping(value = "/my-info")
     public Response<Object> viewMyinfo(

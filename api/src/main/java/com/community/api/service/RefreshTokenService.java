@@ -32,19 +32,15 @@ public class RefreshTokenService {
     }
 
     public String refresh(HttpServletRequest request) {
-
         Cookie[] cookies = request.getCookies();
         if (cookies == null) throw new CommonException(AuthenticationErrorCode.UNKNOWN_ERROR);
-
         String oldRefreshToken = Arrays.stream(cookies)
             .filter(eachCookie -> "refresh_token".equals(eachCookie.getName()))
             .findAny()
             .orElseThrow()
             .getValue();
-
         RefreshTokenEntity tokenEntity = refreshTokenRepository.findById(oldRefreshToken).orElseThrow(
                 AuthenticationErrorCode.UNKNOWN_REFRESH_TOKEN::defaultException);
-
         String username = tokenEntity.getUsername();
         Long userId = userRepository.findByUsername(username).orElseThrow(
                 AuthenticationErrorCode.AUTHENTICATION_FAILED::defaultException).getId();

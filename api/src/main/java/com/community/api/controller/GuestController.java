@@ -75,10 +75,12 @@ public class GuestController {
         // refresh token 쿠키 추가
         String refreshToken = stringSecureRandom.next(20);
         Cookie cookie = new Cookie("refresh_token", refreshToken);
+        // 60초 × 60분 × 24시간 × 30일
         cookie.setMaxAge(2_592_000);
         cookie.setDomain("");
         cookie.setPath("/");
         cookie.setHttpOnly(true);
+        cookie.setSecure(true);
         response.addCookie(cookie);
 
         refreshTokenService.save(principalDetailis.getUser().getUsername(), refreshToken);

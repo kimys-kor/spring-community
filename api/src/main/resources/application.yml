@@ -1,6 +1,6 @@
 key:
-  imgUrl: /C:/Users/demisoda/imgPath
-  imgPath: /C:/Users/demisoda/imgPath
+  postImgUrl: /C:/Users/demisoda/imgPath
+  postImgPath: /C:/Users/demisoda/imgPath
 
 spring:
 

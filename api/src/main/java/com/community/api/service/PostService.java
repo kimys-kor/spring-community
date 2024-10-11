@@ -3,6 +3,7 @@ package com.community.api.service;
 import com.community.api.common.exception.AuthenticationErrorCode;
 import com.community.api.common.exception.BoardErrorCode;
 import com.community.api.common.exception.CommentErrorCode;
+import com.community.api.model.ImgFile;
 import com.community.api.model.LikePost;
 import com.community.api.model.Post;
 import com.community.api.model.User;
@@ -15,12 +16,17 @@ import com.community.api.repository.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +40,13 @@ public class PostService {
         private final PostRepository postRepository;
         private final UserRepository userRepository;
         private final LikePostRepository likePostRepository;
+        private final ImgFileService imgFileService;
+
+        @Value("${key.postImgPath}")
+        private String postImgPath;
+
+        @Value("${key.postImgUrl}")
+        private String postImgUrl;
 
 
         public Page<ReadPostListDto> getList(int typ, String keyword, Pageable pageable) {
@@ -127,6 +140,31 @@ public class PostService {
                 }
 
                 postRepository.delete(post);
+        }
+
+        private String saveFile(MultipartFile file) {
+                LocalDateTime dateTimeNow = LocalDateTime.now();
+                ImgFile imgFile = new ImgFile();
+                String fileNameDateTime = dateTimeNow.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+                try {
+                        String origFileName = file.getOriginalFilename();
+                        String fileName = fileNameDateTime + origFileName;
+                        String savePath = postImgPath;
+
+                        String filePath = savePath + fileName;
+                        file.transferTo(new File(filePath));
+
+                        imgFile.setOrigFileName(origFileName);
+                        imgFile.setFilePath(filePath);
+                        imgFile.setFileName(fileName);
+                        imgFile = imgFileService.save(imgFile);
+                        filePath = imgFile.getFileName();
+
+                        return postImgUrl+filePath;
+                } catch (Exception e) {
+                        System.out.println(e);
+                }
+                return "";
         }
 
 }

@@ -1,6 +1,7 @@
 package com.community.api.repository;
 
 
+import com.community.api.model.dto.ReadBestPostListDto;
 import com.community.api.model.dto.ReadPostContentDto;
 import com.community.api.model.dto.ReadPostListDto;
 import com.querydsl.core.QueryResults;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.community.api.model.QPost.post;
@@ -39,7 +41,8 @@ public class PostCustomRepository {
                         post.hit,
                         post.hate,
                         post.likes,
-                        post.replyNum
+                        post.replyNum,
+                        post.createdDt
                         ))
                 .from(post)
                 .where(
@@ -54,6 +57,50 @@ public class PostCustomRepository {
 
         // 결과를 Pageable 형태로 변환
         List<ReadPostListDto> content = results.getResults();
+        long total = results.getTotal();
+
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    public Page<ReadBestPostListDto> getBestList(String period, Pageable pageable) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+        LocalDateTime timeThreshold;
+
+        // Set the time threshold based on the period
+        if ("week".equalsIgnoreCase(period)) {
+            timeThreshold = LocalDateTime.now().minusDays(7); // Last 7 days
+        } else if ("day".equalsIgnoreCase(period)) {
+            timeThreshold = LocalDateTime.now().minusHours(24); // Last 24 hours
+        } else {
+            throw new IllegalArgumentException("Invalid period. Allowed values are 'week' or 'day'.");
+        }
+
+        QueryResults<ReadBestPostListDto> results = queryFactory.select(Projections.fields(ReadBestPostListDto.class,
+                        post.id,
+                        post.postType,
+                        post.username,
+                        post.nickname,
+                        post.userIp,
+                        post.title,
+                        post.hit,
+                        post.hate,
+                        post.likes,
+                        post.replyNum,
+                        post.createdDt
+                ))
+                .from(post)
+                .where(
+                        post.isDeleted.eq(false)
+                                .and(post.createdDt.after(timeThreshold)) // Use the dynamic time threshold
+                                .and(post.postType.between(2, 10)) // Filter postType between 2 and 10
+                )
+                .orderBy(post.hit.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+        // Convert the results to a Pageable format
+        List<ReadBestPostListDto> content = results.getResults();
         long total = results.getTotal();
 
         return new PageImpl<>(content, pageable, total);

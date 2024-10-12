@@ -121,6 +121,16 @@ public class GuestController {
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, list);
     }
 
+    // 베스트 게시글 리스트
+    @GetMapping(value = "/bestList")
+    public Response<Object> BestBoardList(
+            String period,
+            Pageable pageable
+    ) {
+        Page<ReadBestPostListDto> list = postService.getBestList(period, pageable);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, list);
+    }
+
     // 게시글 상세
     @GetMapping(value = "/content")
     public Response<Object> BoardContent(

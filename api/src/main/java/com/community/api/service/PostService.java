@@ -8,10 +8,7 @@ import com.community.api.model.LikePost;
 import com.community.api.model.Post;
 import com.community.api.model.User;
 import com.community.api.model.base.UserRole;
-import com.community.api.model.dto.ReadPostContentDto;
-import com.community.api.model.dto.ReadPostListDto;
-import com.community.api.model.dto.SavePostDto;
-import com.community.api.model.dto.UpdatePostDto;
+import com.community.api.model.dto.*;
 import com.community.api.repository.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -51,6 +48,10 @@ public class PostService {
 
         public Page<ReadPostListDto> getList(int typ, String keyword, Pageable pageable) {
                 return postCustomRepository.getList(typ, keyword, pageable);
+        }
+
+        public Page<ReadBestPostListDto> getBestList(String period, Pageable pageable) {
+                return postCustomRepository.getBestList(period, pageable);
         }
 
         @Transactional

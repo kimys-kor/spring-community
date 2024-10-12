@@ -5,8 +5,9 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ReadPostListDto {
+public class ReadBestPostListDto {
     private Long id;
+    private int postType;
     private String username;
     private String nickname;
     private String userIp;

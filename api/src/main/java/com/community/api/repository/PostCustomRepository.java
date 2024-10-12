@@ -70,7 +70,7 @@ public class PostCustomRepository {
         if ("week".equalsIgnoreCase(period)) {
             timeThreshold = LocalDateTime.now().minusDays(7); // Last 7 days
         } else if ("day".equalsIgnoreCase(period)) {
-            timeThreshold = LocalDateTime.now().minusHours(24); // Last 24 hours
+            timeThreshold = LocalDateTime.now().minusHours(72); // Last 24 hours
         } else {
             throw new IllegalArgumentException("Invalid period. Allowed values are 'week' or 'day'.");
         }

@@ -2,6 +2,7 @@ package com.community.api.repository;
 
 
 import com.community.api.model.dto.ReadBestPostListDto;
+import com.community.api.model.dto.ReadPartnerPostListDto;
 import com.community.api.model.dto.ReadPostContentDto;
 import com.community.api.model.dto.ReadPostListDto;
 import com.querydsl.core.QueryResults;
@@ -55,7 +56,6 @@ public class PostCustomRepository {
                 .limit(pageable.getPageSize())
                 .fetchResults();
 
-        // 결과를 Pageable 형태로 변환
         List<ReadPostListDto> content = results.getResults();
         long total = results.getTotal();
 
@@ -68,9 +68,9 @@ public class PostCustomRepository {
 
         // Set the time threshold based on the period
         if ("week".equalsIgnoreCase(period)) {
-            timeThreshold = LocalDateTime.now().minusDays(7); // Last 7 days
+            timeThreshold = LocalDateTime.now().minusDays(7);
         } else if ("day".equalsIgnoreCase(period)) {
-            timeThreshold = LocalDateTime.now().minusHours(72); // Last 24 hours
+            timeThreshold = LocalDateTime.now().minusHours(72);
         } else {
             throw new IllegalArgumentException("Invalid period. Allowed values are 'week' or 'day'.");
         }
@@ -91,16 +91,81 @@ public class PostCustomRepository {
                 .from(post)
                 .where(
                         post.isDeleted.eq(false)
-                                .and(post.createdDt.after(timeThreshold)) // Use the dynamic time threshold
-                                .and(post.postType.between(2, 10)) // Filter postType between 2 and 10
+                                .and(post.createdDt.after(timeThreshold))
+                                .and(post.postType.between(2, 10))
                 )
                 .orderBy(post.hit.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
 
-        // Convert the results to a Pageable format
         List<ReadBestPostListDto> content = results.getResults();
+        long total = results.getTotal();
+
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    public Page<ReadBestPostListDto> getNewList(Pageable pageable) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
+        QueryResults<ReadBestPostListDto> results = queryFactory.select(Projections.fields(ReadBestPostListDto.class,
+                        post.id,
+                        post.postType,
+                        post.username,
+                        post.nickname,
+                        post.userIp,
+                        post.title,
+                        post.hit,
+                        post.hate,
+                        post.likes,
+                        post.replyNum,
+                        post.createdDt
+                ))
+                .from(post)
+                .where(
+                        post.isDeleted.eq(false)
+                                .and(post.postType.between(6, 10))
+                )
+                .orderBy(post.createdDt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+        List<ReadBestPostListDto> content = results.getResults();
+        long total = results.getTotal();
+
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    public Page<ReadPartnerPostListDto> getPartnerList(Pageable pageable) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
+        QueryResults<ReadPartnerPostListDto> results = queryFactory.select(Projections.fields(ReadPartnerPostListDto.class,
+                        post.id,
+                        post.postType,
+                        post.username,
+                        post.nickname,
+                        post.userIp,
+                        post.thumbNail,
+                        post.title,
+                        post.code,
+                        post.hit,
+                        post.hate,
+                        post.likes,
+                        post.replyNum,
+                        post.createdDt
+                ))
+                .from(post)
+                .where(
+                        post.isDeleted.eq(false)
+                                .and(post.postType.eq(1))
+                )
+                .orderBy(post.createdDt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+        List<ReadPartnerPostListDto> content = results.getResults();
         long total = results.getTotal();
 
         return new PageImpl<>(content, pageable, total);
@@ -153,7 +218,6 @@ public class PostCustomRepository {
                 )
                 .fetchResults();
 
-        // 결과를 Pageable 형태로 변환
         List<ReadPostListDto> content = results.getResults();
         return content;
     }

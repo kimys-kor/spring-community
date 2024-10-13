@@ -131,6 +131,24 @@ public class GuestController {
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, list);
     }
 
+    // 최근 게시글 리스트
+    @GetMapping(value = "/newList")
+    public Response<Object> NewBoardList(
+            Pageable pageable
+    ) {
+        Page<ReadBestPostListDto> list = postService.getNewList(pageable);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, list);
+    }
+
+    // 파트너 게시글 리스트
+    @GetMapping(value = "/partnerList")
+    public Response<Object> PartnerList(
+            Pageable pageable
+    ) {
+        Page<ReadPartnerPostListDto> list = postService.getPartnerList(pageable);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, list);
+    }
+
     // 게시글 상세
     @GetMapping(value = "/content")
     public Response<Object> BoardContent(

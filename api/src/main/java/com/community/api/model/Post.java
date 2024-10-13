@@ -26,15 +26,18 @@ public class Post extends BaseTime {
     private String username;
     private String nickname;
     private String userIp;
+    private String thumbNail;
     private String title;
     @Lob
     @Column(nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
     private String content;
+    private String code;
     private int hit;
     private int hate;
     private int likes;
     private boolean isDeleted;
     private int replyNum;
+
 
     @Builder.Default
     @OneToMany(mappedBy = "post", orphanRemoval = true)

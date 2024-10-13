@@ -22,6 +22,8 @@ public class QPost extends EntityPathBase<Post> {
 
     public final com.community.api.model.base.QBaseTime _super = new com.community.api.model.base.QBaseTime(this);
 
+    public final StringPath code = createString("code");
+
     public final ListPath<Comment, QComment> commentList = this.<Comment, QComment>createList("commentList", Comment.class, QComment.class, PathInits.DIRECT2);
 
     public final StringPath content = createString("content");
@@ -46,6 +48,8 @@ public class QPost extends EntityPathBase<Post> {
     public final NumberPath<Integer> postType = createNumber("postType", Integer.class);
 
     public final NumberPath<Integer> replyNum = createNumber("replyNum", Integer.class);
+
+    public final StringPath thumbNail = createString("thumbNail");
 
     public final StringPath title = createString("title");
 

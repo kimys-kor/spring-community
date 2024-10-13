@@ -54,6 +54,14 @@ public class PostService {
                 return postCustomRepository.getBestList(period, pageable);
         }
 
+        public Page<ReadBestPostListDto> getNewList(Pageable pageable) {
+                return postCustomRepository.getNewList(pageable);
+        }
+
+        public Page<ReadPartnerPostListDto> getPartnerList(Pageable pageable) {
+                return postCustomRepository.getPartnerList(pageable);
+        }
+
         @Transactional
         public ReadPostContentDto getContent(String username, Long id) {
                 Post post = postRepository.findById(id).orElseThrow(BoardErrorCode.POST_NOT_EXIST::defaultException);
@@ -102,6 +110,7 @@ public class PostService {
                         .username(username)
                         .nickname(userOptional.get().getNickname())
                         .userIp(userIp)
+                        .thumbNail(savePostDto.thumbNail())
                         .title(savePostDto.title())
                         .content(savePostDto.content())
                         .hit(1)
@@ -126,6 +135,7 @@ public class PostService {
 
                 post.setPostType(updatePostDto.postType());
                 post.setNotification(updatePostDto.notification());
+                post.setThumbNail(updatePostDto.thumbNail());
                 post.setTitle(updatePostDto.title());
                 post.setContent(updatePostDto.content());
                 em.flush();
@@ -167,5 +177,7 @@ public class PostService {
                 }
                 return "";
         }
+
+
 
 }

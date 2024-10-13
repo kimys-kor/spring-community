@@ -15,7 +15,9 @@ public record UpdatePostDto(
         @NotBlank(message = "title must not be blank")
         String title,
         @NotBlank(message = "content must not be blank")
-        String content
+        String content,
+        String thumbNail
+
 ) {
 
 }

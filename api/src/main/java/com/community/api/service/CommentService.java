@@ -9,7 +9,6 @@ import com.community.api.model.Post;
 import com.community.api.model.User;
 import com.community.api.model.base.UserRole;
 import com.community.api.model.dto.ReadCommentDto;
-import com.community.api.model.dto.ReadSearchCommentDto;
 import com.community.api.model.dto.SaveCommentDto;
 import com.community.api.repository.CommentCustomRepository;
 import com.community.api.repository.CommentRepository;
@@ -19,6 +18,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -78,12 +78,22 @@ public class CommentService {
             em.clear();
     }
 
-    public List<ReadCommentDto> findCommentsByPostId(Long boardId) {
-        return convertNestedStructure(commentCustomRepository.findByboardId(boardId));
+    public Map<String, Object> findCommentsByPostId(Long boardId, Pageable pageable) {
+        Map<String, Object> returnMap = commentCustomRepository.findByboardId(boardId, pageable);
+        Long total = (Long) returnMap.get("total");
+        List<Comment> comments = (List<Comment>) returnMap.get("comments");
+        List<ReadCommentDto> nestedComments = convertNestedStructure(comments);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("comments", nestedComments);
+        result.put("total", total);
+
+        return result;
     }
 
-    public List<ReadSearchCommentDto> searchComment(String keyword) {
-        return commentCustomRepository.searchComment(keyword);
+    public Map<String, Object> searchComment(String keyword, Pageable pageable) {
+        Map<String, Object> result = commentCustomRepository.searchComment(keyword, pageable);
+        return result;
     }
 
     @Transactional

@@ -27,6 +27,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/guest")
@@ -104,10 +105,11 @@ public class GuestController {
     // 댓글 리스트
     @GetMapping(value = "/list/comment")
     public Response<Object> listComment(
-            Long boardId
+            Long boardId,
+            Pageable pageable
     ) {
-        List<ReadCommentDto> commentList = commentService.findCommentsByPostId(boardId);
-        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, commentList);
+        Map<String, Object> commentsByPostId = commentService.findCommentsByPostId(boardId, pageable);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, commentsByPostId);
     }
 
     // 게시글 리스트

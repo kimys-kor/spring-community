@@ -8,10 +8,13 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.community.api.model.QComment.comment;
 @Repository
@@ -21,20 +24,32 @@ public class CommentCustomRepository {
     private EntityManager em;
 
 
-    public List<Comment> findByboardId(Long boardId) {
+    public Map<String, Object> findByboardId(Long boardId, Pageable pageable) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
-        return queryFactory.selectFrom(comment)
+        QueryResults<Comment> results = queryFactory.selectFrom(comment)
                 .leftJoin(comment.parent)
                 .fetchJoin()
                 .where(comment.post.id.eq(boardId))
                 .orderBy(
                         comment.parent.id.asc().nullsFirst(),
                         comment.createdDt.asc()
-                ).fetch();
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+        List<Comment> comments = results.getResults();
+        long total = results.getTotal();
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("comments", comments);
+        resultMap.put("total", total);
+
+        return resultMap;
     }
 
-    public List<ReadSearchCommentDto> searchComment(String keyword) {
+    public Map<String, Object> searchComment(String keyword, Pageable pageable) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
         QueryResults<ReadSearchCommentDto> results = queryFactory.select(Projections.fields(ReadSearchCommentDto.class,
@@ -50,11 +65,18 @@ public class CommentCustomRepository {
                         keywordFilter(keyword)
 
                 )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetchResults();
 
-        // 결과를 Pageable 형태로 변환
-        List<ReadSearchCommentDto> content = results.getResults();
-        return content;
+        List<ReadSearchCommentDto> comments = results.getResults();
+        long total = results.getTotal();
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("comments", comments);
+        resultMap.put("total", total);
+
+        return resultMap;
     }
 
     private BooleanExpression keywordFilter(String keyword) {

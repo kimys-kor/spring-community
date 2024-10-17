@@ -41,7 +41,8 @@ public class CommentCustomRepository {
                         comment.id,
                         comment.content,
                         comment.username,
-                        comment.nickname
+                        comment.nickname,
+                        comment.createdDt
                 ))
                 .from(comment)
                 .where(

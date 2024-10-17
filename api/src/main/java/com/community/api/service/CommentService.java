@@ -41,10 +41,16 @@ public class CommentService {
     @Transactional
     public void saveComment(String remoteAddr, String username, SaveCommentDto saveCommentDto) {
         
-        // 대댓글 까지만 허용
+        
         if (saveCommentDto.parentId() != null) {
-            Comment parentComment = commentRepository.findById(saveCommentDto.parentId()).orElseThrow();
+            // 대댓글을 작성할 댓글이 없을때 에러처리
+            Comment parentComment = commentRepository.findById(saveCommentDto.parentId()).orElseThrow(BoardErrorCode.PARENT_NOT_EXIST::defaultException);
+            if(parentComment.getPost().getId() != saveCommentDto.boardId()){
+                // 작성하는 대댓글의 postId와 대댓글을 작성하려는 댓글의 postId가 일치하지 않을때 에러처리
+                throw BoardErrorCode.BAD_COMMENT_WRITE_REQUEST.defaultException();
+            }
             if (parentComment.getParent() != null) {
+                // 대댓글 이상 작성시 에러처리
                 throw BoardErrorCode.COMMENT_ONLY_CAN_2STEP.defaultException();
             }
         }

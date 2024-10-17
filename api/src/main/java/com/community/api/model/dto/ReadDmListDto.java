@@ -1,5 +1,6 @@
 package com.community.api.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 public class ReadDmListDto {
     private Long id;
     private String title;
+    @JsonFormat(pattern = "yyyy.MM.dd HH:mm")
     private LocalDateTime createdDt;
 
 }

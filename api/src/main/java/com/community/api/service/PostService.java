@@ -84,6 +84,7 @@ public class PostService {
                 dto.setHate(post.getHate());
                 dto.setLikes(post.getLikes());
                 dto.setReplyNum(post.getReplyNum());
+                dto.setCreatedDt(post.getCreatedDt());
                 if (username == null) {
                         dto.setLiked(false);
                 } else {

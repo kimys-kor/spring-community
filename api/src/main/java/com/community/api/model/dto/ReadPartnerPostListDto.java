@@ -1,5 +1,6 @@
 package com.community.api.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -18,5 +19,6 @@ public class ReadPartnerPostListDto {
     private int hate;
     private int likes;
     private int replyNum;
+    @JsonFormat(pattern = "yyyy.MM.dd HH:mm")
     private LocalDateTime createdDt;
 }

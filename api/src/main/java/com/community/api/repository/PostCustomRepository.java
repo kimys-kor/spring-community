@@ -183,7 +183,8 @@ public class PostCustomRepository {
                         post.hit,
                         post.hate,
                         post.likes,
-                        post.replyNum
+                        post.replyNum,
+                        post.createdDt
                 ))
                 .from(post)
                 .where(
@@ -209,7 +210,8 @@ public class PostCustomRepository {
                         post.hit,
                         post.hate,
                         post.likes,
-                        post.replyNum
+                        post.replyNum,
+                        post.createdDt
                 ))
                 .from(post)
                 .where(

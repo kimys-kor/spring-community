@@ -33,7 +33,7 @@ public class CommentCustomRepository {
                 .where(comment.post.id.eq(boardId))
                 .orderBy(
                         comment.parent.id.asc().nullsFirst(),
-                        comment.createdDt.asc()
+                        comment.createdDt.desc()
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -64,6 +64,9 @@ public class CommentCustomRepository {
                         comment.isDeleted.isFalse(),
                         keywordFilter(keyword)
 
+                )
+                .orderBy(
+                        comment.createdDt.desc()
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

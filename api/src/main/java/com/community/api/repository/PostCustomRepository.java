@@ -218,6 +218,7 @@ public class PostCustomRepository {
                         post.postType.eq(typ2),
                         post.isDeleted.eq(false)
                 )
+                .orderBy(post.createdDt.desc())
                 .fetchResults();
 
         List<ReadPostListDto> content = results.getResults();

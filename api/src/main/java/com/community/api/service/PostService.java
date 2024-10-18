@@ -39,11 +39,7 @@ public class PostService {
         private final LikePostRepository likePostRepository;
         private final ImgFileService imgFileService;
 
-        @Value("${key.postImgPath}")
-        private String postImgPath;
 
-        @Value("${key.postImgUrl}")
-        private String postImgUrl;
 
 
         public Page<ReadPostListDto> getList(int typ, String keyword, Pageable pageable) {
@@ -154,30 +150,7 @@ public class PostService {
                 postRepository.delete(post);
         }
 
-        private String saveFile(MultipartFile file) {
-                LocalDateTime dateTimeNow = LocalDateTime.now();
-                ImgFile imgFile = new ImgFile();
-                String fileNameDateTime = dateTimeNow.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-                try {
-                        String origFileName = file.getOriginalFilename();
-                        String fileName = fileNameDateTime + origFileName;
-                        String savePath = postImgPath;
 
-                        String filePath = savePath + fileName;
-                        file.transferTo(new File(filePath));
-
-                        imgFile.setOrigFileName(origFileName);
-                        imgFile.setFilePath(filePath);
-                        imgFile.setFileName(fileName);
-                        imgFile = imgFileService.save(imgFile);
-                        filePath = imgFile.getFileName();
-
-                        return postImgUrl+filePath;
-                } catch (Exception e) {
-                        System.out.println(e);
-                }
-                return "";
-        }
 
 
 

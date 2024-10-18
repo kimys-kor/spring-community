@@ -1,28 +1,24 @@
 package com.community.api.controller;
 
-import com.community.api.model.Comment;
 import com.community.api.model.Dm;
 import com.community.api.model.User;
 import com.community.api.model.dto.*;
 import com.community.api.service.*;
-import com.community.api.common.jwt.JwtTokenProvider;
 import com.community.api.common.properties.JwtProperties;
-import com.community.api.common.random.StringSecureRandom;
 import com.community.api.common.response.Response;
 import com.community.api.common.response.ResultCode;
 import com.community.api.common.security.PrincipalDetails;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -37,6 +33,7 @@ public class UserController {
     private final LikePostService likePostService;
     private final CommentService commentService;
     private final DmService dmService;
+    private final ImgFileService imgFileService;
 
     @GetMapping(value = "/test")
     public Response<Object> test() {
@@ -230,9 +227,14 @@ public class UserController {
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
-
-
-    
-
+    @PostMapping("/upload")
+    public Response<Object> uploadImages(@RequestParam("files") MultipartFile[] files) {
+        List<String> imgPaths = new ArrayList<>();
+        for (MultipartFile file : files) {
+            String imgPath = imgFileService.saveFile(file);
+            imgPaths.add(imgPath);
+        }
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, imgPaths);
+    }
 
 }

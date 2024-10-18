@@ -27,6 +27,8 @@ public class QImgFile extends EntityPathBase<ImgFile> {
 
     public final StringPath origFileName = createString("origFileName");
 
+    public final DateTimePath<java.time.LocalDateTime> uploadDate = createDateTime("uploadDate", java.time.LocalDateTime.class);
+
     public QImgFile(String variable) {
         super(ImgFile.class, forVariable(variable));
     }

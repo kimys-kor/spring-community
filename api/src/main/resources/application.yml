@@ -3,7 +3,6 @@ key:
   postImgPath: /C:/Users/demisoda/imgPath
 
 spring:
-
   config:
     import:
       - classpath:/app/security/security.yml
@@ -44,6 +43,9 @@ spring:
       enabled: true
       max-request-size: 50MB
 
+  web:
+    resources:
+      static-locations: file:///C:/Users/demisoda/imgPath/
 
 
 

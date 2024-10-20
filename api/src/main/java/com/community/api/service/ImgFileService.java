@@ -70,7 +70,7 @@ public class ImgFileService {
             imgFile.setUploadDate(dateTimeNow);
             imgFile = save(imgFile);
 
-            return fileName;
+            return "http://localhost:8080/"+fileName;
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("File saving failed", e);

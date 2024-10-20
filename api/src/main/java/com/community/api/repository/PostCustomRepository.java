@@ -71,8 +71,10 @@ public class PostCustomRepository {
             timeThreshold = LocalDateTime.now().minusDays(7);
         } else if ("day".equalsIgnoreCase(period)) {
             timeThreshold = LocalDateTime.now().minusHours(72);
+        } else if ("month".equalsIgnoreCase(period)) {
+            timeThreshold = LocalDateTime.now().minusMonths(1);  // Adding "month" period logic
         } else {
-            throw new IllegalArgumentException("Invalid period. Allowed values are 'week' or 'day'.");
+            throw new IllegalArgumentException("Invalid period. Allowed values are 'week', 'day', or 'month'.");
         }
 
         QueryResults<ReadBestPostListDto> results = queryFactory.select(Projections.fields(ReadBestPostListDto.class,

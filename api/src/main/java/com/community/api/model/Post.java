@@ -29,7 +29,7 @@ public class Post extends BaseTime {
     private String thumbNail;
     private String title;
     @Lob
-    @Column(nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
+    @Column(nullable = false, columnDefinition = "MEDIUMTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
     private String content;
     private String code;
     private int hit;

@@ -8,6 +8,7 @@ import com.community.api.common.response.Response;
 import com.community.api.common.response.ResultCode;
 import com.community.api.common.security.PrincipalDetails;
 import com.community.api.model.User;
+import com.community.api.model.base.UserRole;
 import com.community.api.model.base.UserStatus;
 import com.community.api.model.dto.*;
 import com.community.api.service.*;
@@ -80,9 +81,21 @@ public class GuestController {
         cookie.setSecure(true);
         response.addCookie(cookie);
 
+        UserResponseDto userResponseDto = new UserResponseDto(user);
+        if (user.getRole().equals(UserRole.ROLE_MASTER) || user.getRole().equals(UserRole.ROLE_ADMIN)) {
+            userResponseDto.setSck("prprprploolo1234");
+        } else {
+            userResponseDto.setSck(null);
+        }
         refreshTokenService.save(principalDetailis.getUser().getUsername(), refreshToken);
 
-        return new Response(ResultCode.DATA_NORMAL_PROCESSING);
+
+
+
+
+
+
+        return new Response(ResultCode.DATA_NORMAL_PROCESSING, userResponseDto);
     }
 
     // 회원가입

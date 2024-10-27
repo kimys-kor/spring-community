@@ -50,7 +50,7 @@ public class UserController {
             @RequestHeader(value = "Authorization", required = false) String authorizationHeader
     ) {
         UserResponseDto userResponseDto = null;
-
+        System.out.println(authorizationHeader+"hihihihi");
         if (authorizationHeader != null) {
             String username = jwtTokenProvider.safeResolveToken(authorizationHeader);
             User user = userService.findByUsernameSafe(username);

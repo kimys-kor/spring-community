@@ -88,13 +88,6 @@ public class GuestController {
             userResponseDto.setSck(null);
         }
         refreshTokenService.save(principalDetailis.getUser().getUsername(), refreshToken);
-
-
-
-
-
-
-
         return new Response(ResultCode.DATA_NORMAL_PROCESSING, userResponseDto);
     }
 

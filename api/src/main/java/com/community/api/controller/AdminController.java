@@ -30,11 +30,6 @@ import java.util.*;
 public class AdminController {
 
     private final UserService userService;
-    private final StringSecureRandom stringSecureRandom;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final RefreshTokenService refreshTokenService;
-    private final JwtProperties jwtProperties;
-    private final AuthenticationManager authenticationManager;
     private final IpService ipService;
     private final PostService postService;
     private final CommentService commentService;

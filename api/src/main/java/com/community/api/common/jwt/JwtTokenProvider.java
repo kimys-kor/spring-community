@@ -33,4 +33,22 @@ public final class JwtTokenProvider {
                 .asString();
     }
 
+    public String safeResolveToken(String token) {
+        // Remove "Bearer " prefix if present
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        try {
+            return JWT.require(Algorithm.HMAC512(jwtProperties.secretKey()))
+                    .build()
+                    .verify(token)
+                    .getClaim("username")
+                    .asString();
+        } catch (Exception e) {
+            // Log error and handle token verification failure
+            System.err.println("Invalid JWT token: " + e.getMessage());
+            return null;
+        }
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.community.api.controller;
 
+import com.community.api.common.jwt.JwtTokenProvider;
 import com.community.api.model.Dm;
 import com.community.api.model.User;
 import com.community.api.model.dto.*;
@@ -28,6 +29,7 @@ public class UserController {
 
     private final RefreshTokenService refreshTokenService;
     private final JwtProperties jwtProperties;
+    private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
     private final PostService postService;
     private final LikePostService likePostService;
@@ -42,13 +44,25 @@ public class UserController {
 
     // 토큰 리프레쉬
     @GetMapping(value = "/refresh")
-    public Response<Object> refresh (
+    public Response<Object> refresh(
             HttpServletRequest request,
-            HttpServletResponse response
+            HttpServletResponse response,
+            @RequestHeader(value = "Authorization", required = false) String authorizationHeader
     ) {
+        UserResponseDto userResponseDto = null;
+
+        if (authorizationHeader != null) {
+            String username = jwtTokenProvider.safeResolveToken(authorizationHeader);
+            User user = userService.findByUsernameSafe(username);
+            if (user != null) {
+                userResponseDto = new UserResponseDto(user);
+            }
+        }
+
         String accessToken = refreshTokenService.refresh(request);
-        response.addHeader(jwtProperties.headerString(), "Bearer "+accessToken);
-        return new Response(ResultCode.DATA_NORMAL_PROCESSING);
+        response.addHeader(jwtProperties.headerString(), "Bearer " + accessToken);
+
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, userResponseDto);
     }
 
     // 로그아웃

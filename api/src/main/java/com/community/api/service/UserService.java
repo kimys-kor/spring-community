@@ -46,6 +46,14 @@ public class UserService {
         return byId;
     }
 
+    public User findByUsernameSafe(String username) {
+        if (username == null) {
+            return null;
+        }
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("없는 회원입니다."));
+    }
+
     public void updateLastLogin(Long userId, LocalDateTime time) {
         userRepository.updateLastLogin(userId, time);
     }

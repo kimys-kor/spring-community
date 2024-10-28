@@ -144,7 +144,17 @@ public class GuestController {
     public Response<Object> PartnerList(
             Pageable pageable
     ) {
-        Page<ReadPartnerPostListDto> list = postService.getPartnerList(pageable);
+        Page<ReadPartnerPostListDto> list = postService.getPartnerList(1,pageable);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, list);
+    }
+
+    // 포토 게시글 리스트
+    @GetMapping(value = "/photoList")
+    public Response<Object> PhotoList(
+            int postType,
+            Pageable pageable
+    ) {
+        Page<ReadPartnerPostListDto> list = postService.getPartnerList(postType, pageable);
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, list);
     }
 

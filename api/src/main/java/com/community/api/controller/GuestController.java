@@ -82,11 +82,6 @@ public class GuestController {
         response.addCookie(cookie);
 
         UserResponseDto userResponseDto = new UserResponseDto(user);
-        if (user.getRole().equals(UserRole.ROLE_MASTER) || user.getRole().equals(UserRole.ROLE_ADMIN)) {
-            userResponseDto.setSck("prprprploolo1234");
-        } else {
-            userResponseDto.setSck(null);
-        }
         refreshTokenService.save(principalDetailis.getUser().getUsername(), refreshToken);
         return new Response(ResultCode.DATA_NORMAL_PROCESSING, userResponseDto);
     }

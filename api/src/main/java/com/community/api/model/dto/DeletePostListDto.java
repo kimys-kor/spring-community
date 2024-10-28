@@ -6,5 +6,5 @@ import java.util.List;
 
 @Data
 public class DeletePostListDto {
-    public List<Long> ids;
+    public List<Long> idList;
 }

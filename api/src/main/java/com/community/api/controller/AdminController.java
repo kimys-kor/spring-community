@@ -129,7 +129,7 @@ public class AdminController {
         PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
         String username = principalDetailis.getUsername();
 
-        for (Long id : dto.ids) {
+        for (Long id : dto.idList) {
             postService.deletePost(username, id);
         }
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);

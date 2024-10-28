@@ -14,8 +14,9 @@ public class AdminPathIntercepter implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String ipAddress = request.getRemoteAddr();
-        return ipService.findIp("approved", ipAddress);
+//        String ipAddress = request.getRemoteAddr();
+//        return ipService.findIp("approved", ipAddress);
+        return true;
     }
 
     @Override

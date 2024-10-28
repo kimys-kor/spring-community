@@ -39,7 +39,7 @@ public class CommentService {
 
 
     @Transactional
-    public void saveComment(String remoteAddr, String username, SaveCommentDto saveCommentDto) {
+    public Comment saveComment(String remoteAddr, String username, SaveCommentDto saveCommentDto) {
         
         
         if (saveCommentDto.parentId() != null) {
@@ -72,10 +72,12 @@ public class CommentService {
                                             .orElseThrow(CommentErrorCode.COMMENT_NOT_EXIST::defaultException) : null
                     )
                     .build();
-            commentRepository.save(comment);
-            post.setReplyNum(post.getReplyNum()+1);
+        post.setReplyNum(post.getReplyNum()+1);
             em.flush();
             em.clear();
+
+        Comment saveComment = commentRepository.save(comment);
+        return saveComment;
     }
 
     public Map<String, Object> findCommentsByPostId(Long boardId, Pageable pageable) {

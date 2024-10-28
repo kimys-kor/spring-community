@@ -24,9 +24,9 @@ public class QUser extends EntityPathBase<User> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdDt = _super.createdDt;
 
-    public final StringPath fullName = createString("fullName");
+    public final NumberPath<Integer> exp = createNumber("exp", Integer.class);
 
-    public final EnumPath<com.community.api.model.base.UserGrade> grade = createEnum("grade", com.community.api.model.base.UserGrade.class);
+    public final StringPath fullName = createString("fullName");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 

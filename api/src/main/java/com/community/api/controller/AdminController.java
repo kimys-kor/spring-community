@@ -166,6 +166,5 @@ public class AdminController {
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
-    // FIXME 포인트 히스토리, 포인트 쌓이는 기능 추가, 게시글다건이동, 추천게시물가져오기, 배너CRUD
 
 }

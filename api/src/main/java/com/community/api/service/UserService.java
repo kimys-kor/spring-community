@@ -1,7 +1,6 @@
 package com.community.api.service;
 
 import com.community.api.model.User;
-import com.community.api.model.base.UserGrade;
 import com.community.api.model.base.UserRole;
 import com.community.api.model.base.UserStatus;
 import com.community.api.model.dto.UserDetailDto;
@@ -9,12 +8,12 @@ import com.community.api.model.dto.JoinRequestDto;
 import com.community.api.model.dto.UserReadDto;
 import com.community.api.model.dto.UserUpdateDto;
 import com.community.api.repository.UserCustomRepository;
-import com.community.api.common.exception.inteface.CustomException;
 import com.community.api.common.exception.AuthenticationErrorCode;
 import com.community.api.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,6 +34,18 @@ public class UserService {
 
     @PersistenceContext
     EntityManager em;
+
+    @Value("${key.signupPoint}")
+    private String signupPoint;
+
+    @Value("${key.loginPoint}")
+    private String loginPoint;
+
+    @Value("${key.savePostPoint}")
+    private String savePostPoint;
+
+    @Value("${key.saveCommentPoint}")
+    private String saveCommentPoint;
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
@@ -74,7 +85,7 @@ public class UserService {
         return result;
     }
 
-    public void join(JoinRequestDto joinRequestDto) {
+    public User join(JoinRequestDto joinRequestDto) {
         Optional<User> findUser = userRepository.findByUsername(joinRequestDto.username());
         if (!findUser.isEmpty()) {
             throw AuthenticationErrorCode.USER_ALREADY_EXIST.defaultException();
@@ -87,11 +98,12 @@ public class UserService {
                 .fullName(joinRequestDto.fullName())
                 .phoneNum(joinRequestDto.phoneNum())
                 .nickname(joinRequestDto.nickname())
-                .point(0)
+                .point(Integer.parseInt(signupPoint))
+                .exp(1)
                 .role(UserRole.ROLE_USER)
                 .build();
 
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     
@@ -140,7 +152,6 @@ public class UserService {
         return resultNum;
     }
 
-    // 유저 포인트 추가
     @Transactional
     public void addPoint(Long userId, Integer point) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("없는 회원입니다."));
@@ -149,6 +160,38 @@ public class UserService {
         em.clear();
     }
 
+    // 유저 포인트 추가
+    @Transactional
+    public void addPointExp(Long userId, String actionType) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("없는 회원입니다."));
+
+        int pointsToAdd;
+        switch (actionType) {
+            case "signup":
+                pointsToAdd = Integer.parseInt(signupPoint);
+                break;
+            case "login":
+                pointsToAdd = Integer.parseInt(loginPoint);
+                break;
+            case "savePost":
+                pointsToAdd = Integer.parseInt(savePostPoint);
+                break;
+            case "saveComment":
+                pointsToAdd = Integer.parseInt(saveCommentPoint);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid action type");
+        }
+
+        int expToAdd = pointsToAdd / 10;
+
+        user.setPoint(user.getPoint() + pointsToAdd);
+        user.setExp(user.getExp() + expToAdd);
+
+        em.flush();
+        em.clear();
+    }
 
 
 

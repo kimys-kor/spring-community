@@ -15,6 +15,7 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
@@ -37,10 +38,6 @@ public class PostService {
         private final PostRepository postRepository;
         private final UserRepository userRepository;
         private final LikePostRepository likePostRepository;
-        private final ImgFileService imgFileService;
-
-
-
 
         public Page<ReadPostListDto> getList(int typ, String keyword, Pageable pageable) {
                 return postCustomRepository.getList(typ, keyword, pageable);
@@ -95,17 +92,13 @@ public class PostService {
                 return postCustomRepository.getNoticeList(typ);
         }
 
-        public void savePost(String userIp, String username, SavePostDto savePostDto) {
-                Optional<User> userOptional = userRepository.findByUsername(username);
-                if (userOptional.isEmpty()) {
-                        throw AuthenticationErrorCode.USER_NOT_EXIST.defaultException();
-                }
-
+        public Post savePost(String userIp, String username, SavePostDto savePostDto) {
+                User user = userRepository.findByUsername(username).orElseThrow(AuthenticationErrorCode.USER_NOT_EXIST::defaultException);
                 Post post = Post.builder()
                         .postType(savePostDto.postType())
                         .notification(savePostDto.notification())
                         .username(username)
-                        .nickname(userOptional.get().getNickname())
+                        .nickname(user.getNickname())
                         .userIp(userIp)
                         .thumbNail(savePostDto.thumbNail())
                         .title(savePostDto.title())
@@ -116,7 +109,8 @@ public class PostService {
                         .isDeleted(false)
                         .replyNum(0)
                         .build();
-                postRepository.save(post);
+                Post savePost = postRepository.save(post);
+                return savePost;
         }
 
         @Transactional

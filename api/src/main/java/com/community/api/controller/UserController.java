@@ -1,7 +1,9 @@
 package com.community.api.controller;
 
 import com.community.api.common.jwt.JwtTokenProvider;
+import com.community.api.model.Comment;
 import com.community.api.model.Dm;
+import com.community.api.model.Post;
 import com.community.api.model.User;
 import com.community.api.model.dto.*;
 import com.community.api.service.*;
@@ -13,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -27,7 +30,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
+    @Value("${key.savePostPoint}")
+    private String savePostPoint;
+    @Value("${key.saveCommentPoint}")
+    private String saveCommentPoint;
     private final RefreshTokenService refreshTokenService;
+    private final PointHistoryService pointHistoryService;
     private final JwtProperties jwtProperties;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
@@ -36,6 +44,7 @@ public class UserController {
     private final CommentService commentService;
     private final DmService dmService;
     private final ImgFileService imgFileService;
+
 
     @GetMapping(value = "/test")
     public Response<Object> test() {
@@ -107,8 +116,13 @@ public class UserController {
     ) {
         PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
         String username = principalDetailis.getUsername();
+        User user = userService.findByUsername(username);
 
-        postService.savePost(request.getRemoteAddr(), username, savePostDto);
+        Post post = postService.savePost(request.getRemoteAddr(), username, savePostDto);
+        // 유저 포인트, 경험치 증가
+        userService.addPointExp(user.getId(), "login");
+        // 포인트 히스토리 저장
+        pointHistoryService.save(user.getId(), user.getNickname(), "savePost", post.getId());
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
@@ -161,8 +175,13 @@ public class UserController {
 
         PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
         String username = principalDetailis.getUsername();
+        User user = userService.findByUsername(username);
 
-        commentService.saveComment(request.getRemoteAddr(), username, saveCommentDto);
+        Comment comment = commentService.saveComment(request.getRemoteAddr(), username, saveCommentDto);
+        // 유저 포인트, 경험치 증가
+        userService.addPointExp(user.getId(), "saveComment");
+        // 포인트 히스토리 저장
+        pointHistoryService.save(user.getId(), user.getNickname(), "saveComment", comment.getPost().getId());
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 

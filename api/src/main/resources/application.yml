@@ -1,6 +1,10 @@
 key:
   postImgUrl: /C:/Users/demisoda/imgPath
   postImgPath: /C:/Users/demisoda/imgPath
+  signupPoint: 20
+  loginPoint: 10
+  savePostPoint: 50
+  saveCommentPoint: 20
 
 spring:
   config:

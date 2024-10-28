@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +25,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @RestController
@@ -31,10 +33,15 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class GuestController {
 
+    @Value("${key.loginPoint}")
+    private String loginPoint;
+    @Value("${key.signupPoint}")
+    private String signupPoint;
     private final PostService postService;
     private final UserService userService;
     private final CommentService commentService;
     private final RefreshTokenService refreshTokenService;
+    private final PointHistoryService pointHistoryService;
     private final StringSecureRandom stringSecureRandom;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
@@ -58,23 +65,28 @@ public class GuestController {
                         loginRequestDto.password());
 
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-        PrincipalDetails principalDetailis = (PrincipalDetails) authenticate.getPrincipal();
-        String username = principalDetailis.getUser().getUsername();
+        PrincipalDetails principalDetails = (PrincipalDetails) authenticate.getPrincipal();
+        String username = principalDetails.getUser().getUsername();
         User user = userService.findByUsername(username);
+
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime todayMidnight = now.toLocalDate().atStartOfDay();
+        if (user.getLastLogin() == null || user.getLastLogin().isBefore(todayMidnight)) {
+            userService.addPointExp(user.getId(), "login");
+            pointHistoryService.save(user.getId(), user.getNickname(), "login", null);
+        }
 
         if (!user.getStatus().equals(UserStatus.NORMAL)) {
             throw AuthenticationErrorCode.USER_NOT_EXIST.defaultException();
         }
 
-        // access token 헤더 추가
-        String jwtToken = jwtTokenProvider.generateToken(principalDetailis.getUser().getId(), username);
-        response.addHeader(jwtProperties.headerString(), "Bearer "+jwtToken);
+        String jwtToken = jwtTokenProvider.generateToken(principalDetails.getUser().getId(), username);
+        response.addHeader(jwtProperties.headerString(), "Bearer " + jwtToken);
 
-        // refresh token 쿠키 추가
         String refreshToken = stringSecureRandom.next(20);
         Cookie cookie = new Cookie("refresh_token", refreshToken);
-        // 60초 × 60분 × 24시간 × 30일
-        cookie.setMaxAge(2_592_000);
+        cookie.setMaxAge(2_592_000); // 60 seconds × 60 minutes × 24 hours × 30 days
         cookie.setDomain("");
         cookie.setPath("/");
         cookie.setHttpOnly(true);
@@ -82,7 +94,7 @@ public class GuestController {
         response.addCookie(cookie);
 
         UserResponseDto userResponseDto = new UserResponseDto(user);
-        refreshTokenService.save(principalDetailis.getUser().getUsername(), refreshToken);
+        refreshTokenService.save(principalDetails.getUser().getUsername(), refreshToken);
         return new Response(ResultCode.DATA_NORMAL_PROCESSING, userResponseDto);
     }
 
@@ -93,7 +105,10 @@ public class GuestController {
             @RequestBody @Valid JoinRequestDto joinRequestDto
     ){
 
-        userService.join(joinRequestDto);
+        User user = userService.join(joinRequestDto);
+        // 포인트 히스토리 저장
+        String pointContent = String.format("[%s]님 회원가입 + %s포인트", user.getNickname(), signupPoint);
+        pointHistoryService.save(user.getId(), user.getNickname(), pointContent, null);
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 

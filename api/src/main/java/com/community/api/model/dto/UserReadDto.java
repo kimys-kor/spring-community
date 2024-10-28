@@ -6,12 +6,14 @@ import lombok.Data;
 @Data
 public class UserReadDto {
 
-    private UserStatus status;
     private Long id;
-    private String phoneNum;
     private String username;
+    private String phoneNum;
+    private String fullName;
     private String nickname;
+    private int point;
+    private int exp;
+    private UserStatus status;
     private String createdDt;
     private String lastLogin;
-    private int point;
 }

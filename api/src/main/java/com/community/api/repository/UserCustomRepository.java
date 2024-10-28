@@ -47,14 +47,16 @@ public class UserCustomRepository {
 
 
         QueryResults<UserReadDto> results = queryFactory.select(Projections.fields(UserReadDto.class,
-                        user.status,
                         user.id,
-                        user.phoneNum,
                         user.username,
+                        user.phoneNum,
+                        user.fullName,
                         user.nickname,
+                        user.point,
+                        user.exp,
+                        user.status,
                         cratedDt,
-                        lastLogin,
-                        user.point
+                        lastLogin
                 ))
                 .from(user)
                 .where(
@@ -92,7 +94,6 @@ public class UserCustomRepository {
         UserDetailDto userDetailDto = queryFactory.select(Projections.fields(UserDetailDto.class,
                         QUser.user.id,
                         QUser.user.nickname,
-                        QUser.user.grade,
                         QUser.user.point,
                         QUser.user.username,
                         cratedDt,

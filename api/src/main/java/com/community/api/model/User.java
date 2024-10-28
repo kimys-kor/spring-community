@@ -1,6 +1,5 @@
 package com.community.api.model;
 
-import com.community.api.model.base.UserGrade;
 import com.community.api.model.base.UserRole;
 import com.community.api.model.base.BaseTime;
 import com.community.api.model.base.UserStatus;
@@ -31,13 +30,10 @@ public class User extends BaseTime {
 
 
     private int point;
+    private int exp;
 
     @Enumerated(EnumType.STRING)
     private UserStatus status;
-
-    @Enumerated(EnumType.STRING)
-    @Builder.Default
-    private UserGrade grade = UserGrade.BRONZE;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;

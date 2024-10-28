@@ -152,14 +152,16 @@ public class PostService {
 
         @Transactional
         public void transferPost(int postType, String username, Long postId) {
-                Post post = postRepository.findById(postId).orElseThrow(BoardErrorCode.POST_NOT_EXIST::defaultException);
-                User user = userRepository.findByUsername(username).orElseThrow(AuthenticationErrorCode.USER_NOT_EXIST::defaultException);
+                Post post = postRepository.findById(postId)
+                        .orElseThrow(BoardErrorCode.POST_NOT_EXIST::defaultException);
+                User user = userRepository.findByUsername(username)
+                        .orElseThrow(AuthenticationErrorCode.USER_NOT_EXIST::defaultException);
 
                 if (!post.getUsername().equals(username) && user.getRole().equals(UserRole.ROLE_USER)) {
                         throw BoardErrorCode.POST_WRITER_NOT_EQUALS.defaultException();
                 }
+
                 post.setPostType(postType);
-                em.flush();
-                em.clear();
+                postRepository.save(post);
         }
 }

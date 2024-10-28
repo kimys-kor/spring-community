@@ -59,7 +59,6 @@ public class UserController {
         }
         String accessToken = refreshTokenService.refresh(request);
         response.addHeader(jwtProperties.headerString(), "Bearer " + accessToken);
-        System.out.println(userResponseDto.getPhoneNum()+"hihihihi3");
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, userResponseDto);
     }
 

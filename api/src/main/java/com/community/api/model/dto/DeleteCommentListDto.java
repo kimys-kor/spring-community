@@ -6,5 +6,5 @@ import java.util.List;
 
 @Data
 public class DeleteCommentListDto {
-    public List<Long> ids;
+    public List<Long> idList;
 }

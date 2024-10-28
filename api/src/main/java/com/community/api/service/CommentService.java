@@ -104,17 +104,16 @@ public class CommentService {
         if (!comment.getUsername().equals(username) && user.getRole().equals(UserRole.ROLE_USER)) {
             throw CommentErrorCode.COMMENT_WRITER_NOT_EQUALS.defaultException();
         }
-
         if(comment.getChildren().size() != 0) {
             comment.setDeleted(true);
-            em.flush();
-            em.clear();
-            System.out.println("1111d");
         } else {
             commentRepository.delete(getDeletableAncestorComment(comment));
-            System.out.println("2222d");
-
         }
+        Post post = postRepository.findById(comment.getPost().getId()).orElseThrow();
+        int size = post.getCommentList().size();
+        post.setReplyNum(size-1);
+        em.flush();
+        em.clear();
     }
 
 

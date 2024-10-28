@@ -146,7 +146,6 @@ public class PostService {
                 if (!post.getUsername().equals(username) && user.getRole().equals(UserRole.ROLE_USER)) {
                         throw BoardErrorCode.POST_WRITER_NOT_EQUALS.defaultException();
                 }
-
                 postRepository.delete(post);
         }
 

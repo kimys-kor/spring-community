@@ -135,6 +135,22 @@ public class AdminController {
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
+    // 게시글 다중 이동
+    @PutMapping(value = "/transfer/postlist")
+    public Response<Object> transferPostList(
+            @RequestBody TransferPostListDto dto,
+            Authentication authentication
+    ) {
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        String username = principalDetails.getUsername();
+
+        for (Long id : dto.getIdList()) {
+            postService.transferPost(dto.getPostType(),username, id);
+        }
+
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
+    }
+
     // 댓글 다중 삭제
     @PutMapping(value = "/delete/commentlist")
     public Response<Object> deleteCommentList(

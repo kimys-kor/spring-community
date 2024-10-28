@@ -50,7 +50,6 @@ public class UserController {
             @RequestHeader(value = "Authorization", required = false) String authorizationHeader
     ) {
         UserResponseDto userResponseDto = null;
-        System.out.println(authorizationHeader+"hihihihi");
         if (authorizationHeader != null) {
             String username = jwtTokenProvider.safeResolveToken(authorizationHeader);
             User user = userService.findByUsernameSafe(username);
@@ -58,10 +57,9 @@ public class UserController {
                 userResponseDto = new UserResponseDto(user);
             }
         }
-
         String accessToken = refreshTokenService.refresh(request);
         response.addHeader(jwtProperties.headerString(), "Bearer " + accessToken);
-
+        System.out.println(userResponseDto.getPhoneNum()+"hihihihi3");
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, userResponseDto);
     }
 

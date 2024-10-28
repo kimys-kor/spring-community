@@ -24,6 +24,9 @@ public class UserResponseDto {
         this.point = user.getPoint();
         this.status = user.getStatus();
         this.role = user.getRole();
-    }
 
+        if (user.getRole() == UserRole.ROLE_MASTER || user.getRole() == UserRole.ROLE_ADMIN) {
+            this.sck = "prprprploolo1234";
+        }
+    }
 }

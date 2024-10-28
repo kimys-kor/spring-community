@@ -11,6 +11,7 @@ public enum AuthenticationErrorCode implements ErrorCode {
     EXPIRED_REFRESH_TOKEN(HttpStatus.FORBIDDEN, "만료된 리프레시 토큰입니다."),
     UNKNOWN_REFRESH_TOKEN(HttpStatus.FORBIDDEN, "리프레시 토큰이 존재하지 않습니다."),
     UNKNOWN_ERROR(HttpStatus.FORBIDDEN, "액세스 토큰이 존재하지 않습니다."),
+    UNKNOWN_REFRESH_ERROR(HttpStatus.FORBIDDEN, "리프레시 토큰이 존재하지 않습니다."),
     INVALID_TOKEN(HttpStatus.FORBIDDEN, "유효한 액세스 토큰이 아닙니다."),
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 액세스 토큰입니다."),
     UNSUPPORTED_TOKEN(HttpStatus.FORBIDDEN, "변조된 액세스 토큰입니다."),

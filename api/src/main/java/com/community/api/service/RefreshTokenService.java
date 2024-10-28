@@ -33,7 +33,7 @@ public class RefreshTokenService {
 
     public String refresh(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
-        if (cookies == null) throw new CommonException(AuthenticationErrorCode.UNKNOWN_ERROR);
+        if (cookies == null) throw new CommonException(AuthenticationErrorCode.UNKNOWN_REFRESH_TOKEN);
         String oldRefreshToken = Arrays.stream(cookies)
             .filter(eachCookie -> "refresh_token".equals(eachCookie.getName()))
             .findAny()

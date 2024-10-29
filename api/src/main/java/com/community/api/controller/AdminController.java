@@ -5,6 +5,8 @@ import com.community.api.common.response.ResultCode;
 import com.community.api.common.security.PrincipalDetails;
 import com.community.api.model.ApprovedIp;
 import com.community.api.model.BlockedIp;
+import com.community.api.model.User;
+import com.community.api.model.base.UserRole;
 import com.community.api.model.dto.*;
 import com.community.api.service.*;
 
@@ -58,9 +60,12 @@ public class AdminController {
     ) {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         String username = principalDetails.getUsername();
+        User user = userService.findByUsername(username);
 
         userService.addPoint(userId, point);
-        adminActionHistoryService.save(1, username);
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
+            adminActionHistoryService.save(1, username);
+        }
 
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
@@ -80,11 +85,15 @@ public class AdminController {
     {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         String adminUsername = principalDetails.getUsername();
+        User user = userService.findByUsername(adminUsername);
 
         for (String username : dto.idList) {
             userService.setBlock(username);
         }
-        adminActionHistoryService.save(2, adminUsername);
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
+            adminActionHistoryService.save(2, adminUsername);
+        }
+
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
@@ -93,9 +102,12 @@ public class AdminController {
     public Response<Object> findAllPointHistories(String keyword, Pageable pageable, Authentication authentication) {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         String username = principalDetails.getUsername();
+        User user = userService.findByUsername(username);
 
         Page<PointHistoryDto> all = pointHistoryService.findAll(keyword, pageable);
-        adminActionHistoryService.save(3, username);
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
+            adminActionHistoryService.save(3, username);
+        }
 
         return new Response(ResultCode.DATA_NORMAL_PROCESSING, all);
     }
@@ -105,9 +117,12 @@ public class AdminController {
     public Response<Object> addIp(@RequestBody SaveIpDto saveIpDto, Authentication authentication) {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         String username = principalDetails.getUsername();
+        User user = userService.findByUsername(username);
 
         ipService.saveIp(saveIpDto);
-        adminActionHistoryService.save(4, username);
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
+            adminActionHistoryService.save(4, username);
+        }
 
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
@@ -131,9 +146,12 @@ public class AdminController {
     public Response<Object> deleteIp(String type, Long ipId, Authentication authentication) {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         String username = principalDetails.getUsername();
+        User user = userService.findByUsername(username);
 
         ipService.deleteIp(type, ipId);
-        adminActionHistoryService.save(5, username);
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
+            adminActionHistoryService.save(5, username);
+        }
 
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
@@ -143,11 +161,14 @@ public class AdminController {
     public Response<Object> deletePostList(@RequestBody DeletePostListDto dto, Authentication authentication) {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         String username = principalDetails.getUsername();
+        User user = userService.findByUsername(username);
 
         for (Long id : dto.idList) {
             postService.deletePost(username, id);
         }
-        adminActionHistoryService.save(6, username);
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
+            adminActionHistoryService.save(6, username);
+        }
 
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
@@ -157,11 +178,14 @@ public class AdminController {
     public Response<Object> transferPostList(@RequestBody TransferPostListDto dto, Authentication authentication) {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         String username = principalDetails.getUsername();
+        User user = userService.findByUsername(username);
 
         for (Long id : dto.getIdList()) {
             postService.transferPost(dto.getPostType(), username, id);
         }
-        adminActionHistoryService.save(7, username);
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
+            adminActionHistoryService.save(7, username);
+        }
 
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
@@ -171,11 +195,14 @@ public class AdminController {
     public Response<Object> deleteCommentList(@RequestBody DeleteCommentListDto dto, Authentication authentication) {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         String username = principalDetails.getUsername();
+        User user = userService.findByUsername(username);
 
         for (Long id : dto.idList) {
             commentService.deleteComment(username, id);
         }
-        adminActionHistoryService.save(12, username);
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
+            adminActionHistoryService.save(12, username);
+        }
 
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }

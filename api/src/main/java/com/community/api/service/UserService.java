@@ -75,6 +75,12 @@ public class UserService {
         return pageObject;
     }
 
+    // 마스터 페이지 관리자 리스트
+    public Page<UserReadDto> findAllAdmin(String keyword, Pageable pageable) {
+        Page<UserReadDto> pageObject = userCustomRepository.findAllAdmin(keyword, pageable);
+        return pageObject;
+    }
+
     // 관리자 페이지 유저 상세
     public Map<String,Object> findById(Long userId) {
         UserDetailDto userDetailDto = userCustomRepository.findById(userId);

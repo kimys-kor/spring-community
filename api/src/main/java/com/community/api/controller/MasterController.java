@@ -27,6 +27,7 @@ import java.util.Map;
 public class MasterController {
 
     private final AdminActionHistoryService adminActionHistoryService;
+    private final UserService userService;
 
 
     @GetMapping(value = "/test")
@@ -37,11 +38,19 @@ public class MasterController {
 
 
     @GetMapping(value = "/adminActionHistory")
-    public Response<Object> findAllUser(
+    public Response<Object> findActionHistory(
             String keyword,
             Pageable pageable) {
         Page<AdminActionHistoryDto> adminHistory = adminActionHistoryService.findAll(keyword, pageable);
         return new Response(ResultCode.DATA_NORMAL_PROCESSING, adminHistory);
+    }
+
+    @GetMapping(value = "/adiminUser")
+    public Response<Object> findAllAdminUser(
+            String keyword,
+            Pageable pageable) {
+        Page<UserReadDto> all = userService.findAllAdmin(keyword, pageable);
+        return new Response(ResultCode.DATA_NORMAL_PROCESSING, all);
     }
 
 

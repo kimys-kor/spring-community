@@ -83,6 +83,55 @@ public class UserCustomRepository {
 
     }
 
+    public Page<UserReadDto> findAllAdmin(String keyword, Pageable pageable) {
+
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
+        StringExpression cratedDt = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                , user.createdDt
+                , ConstantImpl.create("%Y.%m.%d %H:%i:%s")).as("createdDt");
+
+        StringExpression lastLogin = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                , user.lastLogin
+                , ConstantImpl.create("%Y.%m.%d %H:%i:%s")).as("lastLogin");
+
+
+        QueryResults<UserReadDto> results = queryFactory.select(Projections.fields(UserReadDto.class,
+                        user.id,
+                        user.username,
+                        user.phoneNum,
+                        user.fullName,
+                        user.nickname,
+                        user.point,
+                        user.exp,
+                        user.status,
+                        cratedDt,
+                        lastLogin
+                ))
+                .from(user)
+                .where(
+                        user.role.eq(UserRole.ROLE_ADMIN),
+                        keywordFilter(keyword)
+                )
+                .orderBy(
+                        user.createdDt.desc(),
+                        user.status.asc()
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+
+        List<UserReadDto> data = results.getResults();
+
+
+        long total = results.getTotal();
+        return new PageImpl<>(data, pageable, total);
+
+    }
+
     private BooleanExpression keywordFilter(String keyword) {
         if (StringUtils.isEmpty(keyword)) {
             return null;

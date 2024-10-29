@@ -5,6 +5,7 @@ import com.community.api.model.Comment;
 import com.community.api.model.Dm;
 import com.community.api.model.Post;
 import com.community.api.model.User;
+import com.community.api.model.base.UserRole;
 import com.community.api.model.dto.*;
 import com.community.api.service.*;
 import com.community.api.common.properties.JwtProperties;
@@ -44,6 +45,7 @@ public class UserController {
     private final CommentService commentService;
     private final DmService dmService;
     private final ImgFileService imgFileService;
+    private final AdminActionHistoryService adminActionHistoryService;
 
 
     @GetMapping(value = "/test")
@@ -123,6 +125,11 @@ public class UserController {
         userService.addPointExp(user.getId(), "login");
         // 포인트 히스토리 저장
         pointHistoryService.save(user.getUsername(), user.getNickname(), "savePost", post.getId());
+        // 어드민일경우 로그 저장
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
+            adminActionHistoryService.save(8, user.getUsername());
+        }
+
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
@@ -134,8 +141,14 @@ public class UserController {
     ) {
         PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
         String username = principalDetailis.getUsername();
+        User user = userService.findByUsername(username);
 
         postService.updatePost(username, updatePostDto);
+        // 어드민일경우 로그 저장
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
+            adminActionHistoryService.save(9, user.getUsername());
+        }
+
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
@@ -160,8 +173,13 @@ public class UserController {
     ) {
         PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
         String username = principalDetailis.getUsername();
+        User user = userService.findByUsername(username);
 
         postService.deletePost(username, postId);
+        // 어드민일경우 로그 저장
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
+            adminActionHistoryService.save(6, user.getUsername());
+        }
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
@@ -182,6 +200,9 @@ public class UserController {
         userService.addPointExp(user.getId(), "saveComment");
         // 포인트 히스토리 저장
         pointHistoryService.save(user.getUsername(), user.getNickname(), "saveComment", comment.getPost().getId());
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
+            adminActionHistoryService.save(10, user.getUsername());
+        }
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
@@ -195,8 +216,12 @@ public class UserController {
     ){
         PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
         String username = principalDetailis.getUsername();
+        User user = userService.findByUsername(username);
 
         commentService.deleteComment(username, commentId);
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
+            adminActionHistoryService.save(12, user.getUsername());
+        }
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
@@ -208,8 +233,12 @@ public class UserController {
     ){
         PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
         String username = principalDetailis.getUsername();
+        User user = userService.findByUsername(username);
 
         commentService.updateComment(username, saveCommentDto);
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
+            adminActionHistoryService.save(11, user.getUsername());
+        }
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 

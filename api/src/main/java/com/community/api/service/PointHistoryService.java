@@ -31,7 +31,6 @@ public class PointHistoryService {
     private final PointHistoryRepository pointHistoryRepository;
     private final PointHistoryCustomRepository pointHistoryCustomRepository;
 
-
     public Page<PointHistoryDto> findAll(String keyword, Pageable pageable){
         return pointHistoryCustomRepository.findAll(keyword, pageable);
     }

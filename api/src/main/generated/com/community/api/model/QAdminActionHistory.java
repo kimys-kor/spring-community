@@ -21,6 +21,8 @@ public class QAdminActionHistory extends EntityPathBase<AdminActionHistory> {
 
     public final com.community.api.model.base.QBaseTime _super = new com.community.api.model.base.QBaseTime(this);
 
+    public final NumberPath<Integer> actionType = createNumber("actionType", Integer.class);
+
     public final StringPath content = createString("content");
 
     //inherited
@@ -30,8 +32,6 @@ public class QAdminActionHistory extends EntityPathBase<AdminActionHistory> {
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedDt = _super.updatedDt;
-
-    public final NumberPath<Long> userId = createNumber("userId", Long.class);
 
     public final StringPath username = createString("username");
 

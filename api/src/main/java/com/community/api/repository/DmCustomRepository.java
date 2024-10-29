@@ -37,6 +37,9 @@ public class DmCustomRepository {
                 .where(
                         dm.receiver.eq(username)
                 )
+                .orderBy(
+                        dm.createdDt.desc()
+                )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();

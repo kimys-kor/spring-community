@@ -40,6 +40,9 @@ public class PointHistoryCustomRepository {
                 .where(
                         keywordFilter(keyword)
                 )
+                .orderBy(
+                        pointHistory.createdDt.desc()
+                )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();

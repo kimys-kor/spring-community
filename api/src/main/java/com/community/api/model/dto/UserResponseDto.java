@@ -25,8 +25,10 @@ public class UserResponseDto {
         this.status = user.getStatus();
         this.role = user.getRole();
 
-        if (user.getRole() == UserRole.ROLE_MASTER || user.getRole() == UserRole.ROLE_ADMIN) {
+        if (user.getRole() == UserRole.ROLE_ADMIN) {
             this.sck = "prprprploolo1234";
+        } else if (user.getRole() == UserRole.ROLE_MASTER)  {
+            this.sck = "asdasdfz12e5t185g8";
         }
     }
 }

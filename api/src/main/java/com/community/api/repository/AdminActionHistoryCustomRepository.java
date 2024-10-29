@@ -40,6 +40,9 @@ public class AdminActionHistoryCustomRepository {
                 .where(
                         keywordFilter(keyword)
                 )
+                .orderBy(
+                        adminActionHistory.createdDt.desc()
+                )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();

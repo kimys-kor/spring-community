@@ -16,7 +16,7 @@ public class PointHistory extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long postId;
-    private Long userId;
+    private String username;
 
     private String pointContent;
 

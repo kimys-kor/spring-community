@@ -74,7 +74,7 @@ public class GuestController {
         LocalDateTime todayMidnight = now.toLocalDate().atStartOfDay();
         if (user.getLastLogin() == null || user.getLastLogin().isBefore(todayMidnight)) {
             userService.addPointExp(user.getId(), "login");
-            pointHistoryService.save(user.getId(), user.getNickname(), "login", null);
+            pointHistoryService.save(user.getUsername(), user.getNickname(), "login", null);
         }
 
         if (!user.getStatus().equals(UserStatus.NORMAL)) {
@@ -108,7 +108,7 @@ public class GuestController {
         User user = userService.join(joinRequestDto);
         // 포인트 히스토리 저장
         String pointContent = String.format("[%s]님 회원가입 + %s포인트", user.getNickname(), signupPoint);
-        pointHistoryService.save(user.getId(), user.getNickname(), pointContent, null);
+        pointHistoryService.save(user.getUsername(), user.getNickname(), pointContent, null);
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 

@@ -122,7 +122,7 @@ public class UserController {
         // 유저 포인트, 경험치 증가
         userService.addPointExp(user.getId(), "login");
         // 포인트 히스토리 저장
-        pointHistoryService.save(user.getId(), user.getNickname(), "savePost", post.getId());
+        pointHistoryService.save(user.getUsername(), user.getNickname(), "savePost", post.getId());
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
@@ -181,7 +181,7 @@ public class UserController {
         // 유저 포인트, 경험치 증가
         userService.addPointExp(user.getId(), "saveComment");
         // 포인트 히스토리 저장
-        pointHistoryService.save(user.getId(), user.getNickname(), "saveComment", comment.getPost().getId());
+        pointHistoryService.save(user.getUsername(), user.getNickname(), "saveComment", comment.getPost().getId());
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 

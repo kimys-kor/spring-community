@@ -33,50 +33,13 @@ public class AdminController {
     private final IpService ipService;
     private final PostService postService;
     private final CommentService commentService;
+    private final PointHistoryService pointHistoryService;
 
 
     @GetMapping(value = "/test")
     public Response<Object> test() {
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
-
-
-    // ip추가
-    @PostMapping(value = "/add/ip")
-    public Response<Object> addIp(
-            @RequestBody SaveIpDto saveIpDto
-            ) {
-
-        ipService.saveIp(saveIpDto);
-        return new Response(ResultCode.DATA_NORMAL_PROCESSING);
-    }
-
-    // 차단 ip리스트
-    @GetMapping(value = "/blockediplist")
-    public Response<Object> findAllBlockedIp(
-    ) {
-        List<BlockedIp> allBlockedIp = ipService.findAllBlockedIp();
-        return new Response(ResultCode.DATA_NORMAL_PROCESSING, allBlockedIp);
-    }
-
-    // 허용 ip리스트
-    @GetMapping(value = "/approvediplist")
-    public Response<Object> findAllApprovedIp(
-    ) {
-        List<ApprovedIp> allApprovedIp = ipService.findAllApprovedIp();
-        return new Response(ResultCode.DATA_NORMAL_PROCESSING, allApprovedIp);
-    }
-
-    // ip 삭제
-    @DeleteMapping(value = "/delete/ip")
-    public Response<Object> deleteIp(
-        String type,
-        Long ipId
-    ) {
-        ipService.deleteIp(type, ipId);
-        return new Response(ResultCode.DATA_NORMAL_PROCESSING);
-    }
-
 
     // 유저 리스트
     @GetMapping(value = "/user/findall")
@@ -118,6 +81,56 @@ public class AdminController {
         userService.setBlock(username);
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
+
+    // 포인트 히스토리
+    @GetMapping(value = "/point-history")
+    public Response<Object> findAllPointHistories(
+            String keyword,
+            Pageable pageable
+    ) {
+        Page<PointHistoryDto> all = pointHistoryService.findAll(keyword, pageable);
+        return new Response(ResultCode.DATA_NORMAL_PROCESSING, all);
+    }
+
+
+    // ip추가
+    @PostMapping(value = "/add/ip")
+    public Response<Object> addIp(
+            @RequestBody SaveIpDto saveIpDto
+            ) {
+
+        ipService.saveIp(saveIpDto);
+        return new Response(ResultCode.DATA_NORMAL_PROCESSING);
+    }
+
+    // 차단 ip리스트
+    @GetMapping(value = "/blockediplist")
+    public Response<Object> findAllBlockedIp(
+    ) {
+        List<BlockedIp> allBlockedIp = ipService.findAllBlockedIp();
+        return new Response(ResultCode.DATA_NORMAL_PROCESSING, allBlockedIp);
+    }
+
+    // 허용 ip리스트
+    @GetMapping(value = "/approvediplist")
+    public Response<Object> findAllApprovedIp(
+    ) {
+        List<ApprovedIp> allApprovedIp = ipService.findAllApprovedIp();
+        return new Response(ResultCode.DATA_NORMAL_PROCESSING, allApprovedIp);
+    }
+
+    // ip 삭제
+    @DeleteMapping(value = "/delete/ip")
+    public Response<Object> deleteIp(
+        String type,
+        Long ipId
+    ) {
+        ipService.deleteIp(type, ipId);
+        return new Response(ResultCode.DATA_NORMAL_PROCESSING);
+    }
+
+
+
 
 
     // 게시글 다중 삭제

@@ -35,7 +35,7 @@ public class QPointHistory extends EntityPathBase<PointHistory> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedDt = _super.updatedDt;
 
-    public final NumberPath<Long> userId = createNumber("userId", Long.class);
+    public final StringPath username = createString("username");
 
     public QPointHistory(String variable) {
         super(PointHistory.class, forVariable(variable));

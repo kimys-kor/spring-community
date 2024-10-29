@@ -123,7 +123,6 @@ public class AdminController {
         if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
             adminActionHistoryService.save(4, username);
         }
-
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
@@ -142,13 +141,18 @@ public class AdminController {
     }
 
     // IP 삭제 (ActionType 5)
-    @DeleteMapping(value = "/delete/ip")
-    public Response<Object> deleteIp(String type, Long ipId, Authentication authentication) {
+    @PutMapping(value = "/delete/ip")
+    public Response<Object> deleteIp(
+            @RequestBody DeletePostListDto dto,
+            Authentication authentication
+    ) {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         String username = principalDetails.getUsername();
         User user = userService.findByUsername(username);
 
-        ipService.deleteIp(type, ipId);
+        for (Long id : dto.idList) {
+            ipService.deleteIp(id);
+        }
         if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
             adminActionHistoryService.save(5, username);
         }

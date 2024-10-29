@@ -72,13 +72,8 @@ public class IpService {
         return approvedIpRepository.findAll();
     }
 
-    public void deleteIp(String type, Long ipId) {
-        if (type.equals("blocked")) {
+    public void deleteIp(Long ipId) {
             BlockedIp  approvedIp = blockedIpRepository.findById(ipId).orElseThrow(AdminErrorCode.NO_EXIST_IP::defaultException);
             blockedIpRepository.delete(approvedIp);
-        } else if (type.equals("approved")) {
-            ApprovedIp approvedIp = approvedIpRepository.findById(ipId).orElseThrow(AdminErrorCode.NO_EXIST_IP::defaultException);
-            approvedIpRepository.delete(approvedIp);
-        }
     }
 }

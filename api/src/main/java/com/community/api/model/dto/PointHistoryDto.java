@@ -1,5 +1,6 @@
 package com.community.api.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -11,5 +12,6 @@ public class PointHistoryDto {
     private String username;
     private String pointContent;
     private int point;
+    @JsonFormat(pattern = "yyyy.MM.dd HH:mm")
     private LocalDateTime createdDt;
 }

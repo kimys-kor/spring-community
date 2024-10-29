@@ -70,8 +70,8 @@ public class UserService {
     }
 
     // 관리자 페이지 유저 리스트
-    public Page<UserReadDto> findAll(Pageable pageable) {
-        Page<UserReadDto> pageObject = userCustomRepository.findAll(pageable);
+    public Page<UserReadDto> findAll(String keyword, Pageable pageable) {
+        Page<UserReadDto> pageObject = userCustomRepository.findAll(keyword, pageable);
         return pageObject;
     }
 

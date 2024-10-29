@@ -9,6 +9,7 @@ import com.community.api.model.dto.UserReadDto;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -18,9 +19,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+import static com.community.api.model.QAdminActionHistory.adminActionHistory;
 import static com.community.api.model.QUser.user;
 
 
@@ -31,7 +34,7 @@ public class UserCustomRepository {
     @PersistenceContext
     private EntityManager em;
 
-    public Page<UserReadDto> findAll(Pageable pageable) {
+    public Page<UserReadDto> findAll(String keyword, Pageable pageable) {
 
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
@@ -61,7 +64,11 @@ public class UserCustomRepository {
                 .from(user)
                 .where(
                         user.role.eq(UserRole.ROLE_USER),
-                        user.status.eq(UserStatus.NORMAL)
+                        keywordFilter(keyword)
+                )
+                .orderBy(
+                        user.createdDt.desc(),
+                        user.status.asc()
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -74,6 +81,25 @@ public class UserCustomRepository {
         long total = results.getTotal();
         return new PageImpl<>(data, pageable, total);
 
+    }
+
+    private BooleanExpression keywordFilter(String keyword) {
+        if (StringUtils.isEmpty(keyword)) {
+            return null;
+        }
+
+        BooleanExpression condition = user.username.containsIgnoreCase(keyword)
+                .or(user.phoneNum.containsIgnoreCase(keyword))
+                .or(user.fullName.containsIgnoreCase(keyword))
+                .or(user.nickname.containsIgnoreCase(keyword));
+
+        try {
+            UserStatus status = UserStatus.valueOf(keyword.toUpperCase());
+            condition = condition.or(user.status.eq(status));
+        } catch (IllegalArgumentException e) {
+        }
+
+        return condition;
     }
 
     public UserDetailDto findById(Long userId) {

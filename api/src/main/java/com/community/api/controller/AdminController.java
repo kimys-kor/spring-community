@@ -35,8 +35,10 @@ public class AdminController {
 
     // 유저 리스트
     @GetMapping(value = "/user/findall")
-    public Response<Object> findAllUser(Pageable pageable) {
-        Page<UserReadDto> all = userService.findAll(pageable);
+    public Response<Object> findAllUser(
+            String keyword,
+            Pageable pageable) {
+        Page<UserReadDto> all = userService.findAll(keyword, pageable);
         return new Response(ResultCode.DATA_NORMAL_PROCESSING, all);
     }
 
@@ -71,14 +73,18 @@ public class AdminController {
     }
 
     // 유저 접근차단, 해제 (ActionType 2)
-    @PatchMapping(value = "/set/block/{username}")
-    public Response<Object> setBlock(@PathVariable String username, Authentication authentication) {
+    @PutMapping(value = "/set/block")
+    public Response<Object> setBlock(
+            @RequestBody DeleteIdListDto dto,
+            Authentication authentication)
+    {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         String adminUsername = principalDetails.getUsername();
 
-        userService.setBlock(username);
+        for (String username : dto.idList) {
+            userService.setBlock(username);
+        }
         adminActionHistoryService.save(2, adminUsername);
-
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 

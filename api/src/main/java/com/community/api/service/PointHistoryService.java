@@ -28,6 +28,9 @@ public class PointHistoryService {
     @Value("${key.saveCommentPoint}")
     private String saveCommentPoint;
 
+    @Value("${key.savePromotionPoint}")
+    private String savePromotionPoint;
+
     private final PointHistoryRepository pointHistoryRepository;
     private final PointHistoryCustomRepository pointHistoryCustomRepository;
 
@@ -74,7 +77,9 @@ public class PointHistoryService {
             return Integer.parseInt(savePostPoint);
         } else if ("saveComment".equals(actionType)) {
             return Integer.parseInt(saveCommentPoint);
-        } else {
+        } else if ("savePromotion".equals(actionType)) {
+            return -Integer.parseInt(savePromotionPoint);
+        }else {
             return 0;
         }
     }

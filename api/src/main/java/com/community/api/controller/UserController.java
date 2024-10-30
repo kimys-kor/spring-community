@@ -145,16 +145,22 @@ public class UserController {
             HttpServletRequest request,
             Authentication authentication
     ) {
-        PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
-        String username = principalDetailis.getUsername();
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        String username = principalDetails.getUsername();
         User user = userService.findByUsername(username);
 
+
         Post post = postService.savePost(request.getRemoteAddr(), username, savePostDto);
-        // 유저 포인트, 경험치 증가
-        userService.addPointExp(user.getId(), "login");
-        // 포인트 히스토리 저장
-        pointHistoryService.save(user.getUsername(), user.getNickname(), "savePost", post.getId());
-        // 어드민일경우 로그 저장
+
+        if (savePostDto.postType() == 16 || savePostDto.postType() == 17 || savePostDto.postType() == 18) {
+            userService.addPoint(user.getId(), -30);
+            pointHistoryService.save(user.getUsername(), user.getNickname(), "savePromotion", post.getId());
+        } else {
+            userService.addPointExp(user.getId(), "login");
+            pointHistoryService.save(user.getUsername(), user.getNickname(), "savePost", post.getId());
+        }
+
+
         if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
             adminActionHistoryService.save(8, user.getUsername());
         }

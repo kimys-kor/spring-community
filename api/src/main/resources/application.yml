@@ -5,6 +5,7 @@ key:
   loginPoint: 10
   savePostPoint: 50
   saveCommentPoint: 20
+  savePromotionPoint: 30
   bannerImgUrl: /C:/Users/demisoda/bannerImgPath
   bannerImgPath: /C:/Users/demisoda/bannerImgPath
 

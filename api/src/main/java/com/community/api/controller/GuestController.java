@@ -101,7 +101,6 @@ public class GuestController {
     // 회원가입
     @PostMapping(value = "/join")
     public Response<Object> join(
-            HttpServletRequest request,
             @RequestBody @Valid JoinRequestDto joinRequestDto
     ){
 

@@ -8,8 +8,11 @@ import com.community.api.common.response.ResultCode;
 import com.community.api.common.security.PrincipalDetails;
 import com.community.api.model.ApprovedIp;
 import com.community.api.model.BlockedIp;
+import com.community.api.model.User;
 import com.community.api.model.dto.*;
 import com.community.api.service.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -51,6 +54,15 @@ public class MasterController {
             Pageable pageable) {
         Page<UserReadDto> all = userService.findAllAdmin(keyword, pageable);
         return new Response(ResultCode.DATA_NORMAL_PROCESSING, all);
+    }
+
+    @PostMapping(value = "/saveAdmin")
+    public Response<Object> saveAdmin(
+            @RequestBody @Valid JoinRequestDto joinRequestDto
+    ){
+
+        userService.saveAdmin(joinRequestDto);
+        return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
 

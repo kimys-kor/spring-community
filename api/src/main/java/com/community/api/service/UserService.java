@@ -110,6 +110,27 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User saveAdmin(JoinRequestDto joinRequestDto) {
+        Optional<User> findUser = userRepository.findByUsername(joinRequestDto.username());
+        if (!findUser.isEmpty()) {
+            throw AuthenticationErrorCode.USER_ALREADY_EXIST.defaultException();
+        }
+
+        User user = User.builder()
+                .status(UserStatus.NORMAL)
+                .username(joinRequestDto.username())
+                .password(passwordEncoder.encode(joinRequestDto.password()))
+                .fullName(joinRequestDto.fullName())
+                .phoneNum(joinRequestDto.phoneNum())
+                .nickname(joinRequestDto.nickname())
+                .point(Integer.parseInt(signupPoint))
+                .exp(1)
+                .role(UserRole.ROLE_ADMIN)
+                .build();
+
+        return userRepository.save(user);
+    }
+
     
 
     public List countAllByCreatedDtBetween() {
@@ -241,12 +262,15 @@ public class UserService {
     }
 
     // 어드민이상 유저정보 수정
-    public void updateUserInfo(String username, UserUpdateAdminDto userUpdateAdminDto) {
-        User user = userRepository.findByUsername(username).orElseThrow();
+    @Transactional
+    public void updateUserInfo(UserUpdateAdminDto userUpdateAdminDto) {
+        User user = userRepository.findByUsername(userUpdateAdminDto.getUsername()).orElseThrow();
+
         user.setPassword(passwordEncoder.encode(userUpdateAdminDto.getPassword()));
         user.setPhoneNum(userUpdateAdminDto.getPhoneNum());
         user.setFullName(userUpdateAdminDto.getFullName());
         user.setNickname(userUpdateAdminDto.getNickname());
+
         em.flush();
         em.clear();
     }

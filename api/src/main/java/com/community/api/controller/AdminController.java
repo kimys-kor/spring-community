@@ -93,9 +93,28 @@ public class AdminController {
         if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
             adminActionHistoryService.save(2, adminUsername);
         }
-
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
+
+    // 관리자 유저 정보수정 (ActionType 13)
+    @PatchMapping(value = "/update/userinfo")
+    public Response<Object> updateUserInfo(
+            @RequestBody UserUpdateAdminDto userUpdateAdminDto,
+            Authentication authentication
+    ) {
+        PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+        String adminName = principalDetailis.getUsername();
+        User admin = userService.findByUsername(adminName);
+
+        userService.updateUserInfo(userUpdateAdminDto);
+        if (admin.getRole().equals(UserRole.ROLE_ADMIN)) {
+            adminActionHistoryService.save(13, adminName);
+        }
+
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
+    }
+
+
 
     // 포인트 히스토리 (ActionType 3)
     @GetMapping(value = "/point-history")

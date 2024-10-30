@@ -56,6 +56,8 @@ public class AdminActionHistoryService {
             case 12:
                 content = "댓글 삭제";
                 break;
+            case 13:
+                content = "유저 정보 수정";
             default:
                 content = "알 수 없는 작업";
         }

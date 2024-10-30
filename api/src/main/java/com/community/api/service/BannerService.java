@@ -6,6 +6,8 @@ import com.community.api.repository.BannerRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,5 +38,16 @@ public class BannerService {
 
     public List<Banner> getAllBanners() {
         return bannerRepository.findAll();
+    }
+
+    public List<Banner> get3Banners() {
+        List<Banner> banners = bannerRepository.findAll();
+
+        if (banners.size() <= 3) {
+            return banners;
+        }
+
+        Collections.shuffle(banners);
+        return banners.subList(0, 3);
     }
 }

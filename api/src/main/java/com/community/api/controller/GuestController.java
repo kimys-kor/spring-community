@@ -191,10 +191,17 @@ public class GuestController {
     // 배너리스트
     @GetMapping(value = "/bannerlist")
     public Response<Object> bannerList(
-            Authentication authentication
     ) {
         List<Banner> allBanners = bannerService.getAllBanners();
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, allBanners);
+    }
+
+    // 3배너리스트
+    @GetMapping(value = "/threeBannerlist")
+    public Response<Object> banner3List(
+    ) {
+        List<Banner> threeBanners = bannerService.get3Banners();
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, threeBanners);
     }
 
 

@@ -78,6 +78,7 @@ public class PostService {
                 dto.setLikes(post.getLikes());
                 dto.setReplyNum(post.getReplyNum());
                 dto.setCreatedDt(post.getCreatedDt());
+                dto.setNotification(post.isNotification());
                 if (username == null) {
                         dto.setLiked(false);
                 } else {
@@ -124,7 +125,6 @@ public class PostService {
                         throw BoardErrorCode.POST_WRITER_NOT_EQUALS.defaultException();
                 }
 
-                post.setPostType(updatePostDto.postType());
                 post.setNotification(updatePostDto.notification());
                 post.setThumbNail(updatePostDto.thumbNail());
                 post.setTitle(updatePostDto.title());

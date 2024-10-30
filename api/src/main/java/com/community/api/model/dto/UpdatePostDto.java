@@ -8,16 +8,14 @@ import lombok.Builder;
 public record UpdatePostDto(
         @NotNull(message = "postId must not be blank")
         Long postId,
-        @NotNull(message = "postType must not be blank")
-        int postType,
-        @NotNull(message = "notification must not be blank")
         boolean notification,
         @NotBlank(message = "title must not be blank")
         String title,
         @NotBlank(message = "content must not be blank")
         String content,
         String thumbNail
-
 ) {
-
+        public static class UpdatePostDtoBuilder {
+                private boolean notification = false;
+        }
 }

@@ -20,4 +20,5 @@ public class ReadPostContentDto {
     private boolean isLiked;
     @JsonFormat(pattern = "yyyy.MM.dd HH:mm")
     private LocalDateTime createdDt;
+    private boolean isNotification;
 }

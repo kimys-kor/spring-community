@@ -23,10 +23,10 @@ public class User extends BaseTime {
     @Column(unique = true)
     private String username;
     private String password;
-
-    private String phoneNum;
     private String fullName;
     private String nickname;
+    private String phoneNum;
+
 
 
     private int point;

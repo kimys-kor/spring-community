@@ -1,12 +1,10 @@
 package com.community.api.service;
 
+import com.community.api.common.exception.CommonException;
 import com.community.api.model.User;
 import com.community.api.model.base.UserRole;
 import com.community.api.model.base.UserStatus;
-import com.community.api.model.dto.UserDetailDto;
-import com.community.api.model.dto.JoinRequestDto;
-import com.community.api.model.dto.UserReadDto;
-import com.community.api.model.dto.UserUpdateDto;
+import com.community.api.model.dto.*;
 import com.community.api.repository.UserCustomRepository;
 import com.community.api.common.exception.AuthenticationErrorCode;
 import com.community.api.repository.UserRepository;
@@ -204,19 +202,55 @@ public class UserService {
     // 유저 내정보 수정
     @Transactional
     public void updateMyInfo(String username, UserUpdateDto userUpdateDto) {
-        System.out.println(userUpdateDto.getFullName());
-        System.out.println(userUpdateDto.getNickname());
-        System.out.println(userUpdateDto.getPhoneNum());
-
-
         User user = userRepository.findByUsername(username).orElseThrow();
-        user.setPassword(passwordEncoder.encode(userUpdateDto.getPassword()));
         user.setPhoneNum(userUpdateDto.getPhoneNum());
         user.setFullName(userUpdateDto.getFullName());
         user.setNickname(userUpdateDto.getNickname());
         em.flush();
         em.clear();
     }
+
+    // 유저 탈퇴
+    @Transactional
+    public void updateWithdrawl(String username, String password) {
+        User user = userRepository.findByUsername(username).orElseThrow();
+        boolean matches = passwordEncoder.matches(password, user.getPassword());
+        if (matches) {
+            user.setStatus(UserStatus.DELETED);
+        } else {
+            throw new CommonException(AuthenticationErrorCode.AUTHENTICATION_FAILED);
+        }
+        em.flush();
+        em.clear();
+    }
+
+    // 유저 비번 수정
+    @Transactional
+    public void updateMyPW(String username, UserPWUpdateDto userPWUpdateDto) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new CommonException(AuthenticationErrorCode.USER_NOT_EXIST));
+
+        boolean matches = passwordEncoder.matches(userPWUpdateDto.getOldpassword(), user.getPassword());
+        if (matches) {
+            user.setPassword(passwordEncoder.encode(userPWUpdateDto.getNewpassword()));
+        } else {
+            throw new CommonException(AuthenticationErrorCode.AUTHENTICATION_FAILED);
+        }
+        em.flush();
+        em.clear();
+    }
+
+    // 어드민이상 유저정보 수정
+    public void updateUserInfo(String username, UserUpdateAdminDto userUpdateAdminDto) {
+        User user = userRepository.findByUsername(username).orElseThrow();
+        user.setPassword(passwordEncoder.encode(userUpdateAdminDto.getPassword()));
+        user.setPhoneNum(userUpdateAdminDto.getPhoneNum());
+        user.setFullName(userUpdateAdminDto.getFullName());
+        user.setNickname(userUpdateAdminDto.getNickname());
+        em.flush();
+        em.clear();
+    }
+
 
     @Transactional
     public void setBlock(String username) {
@@ -233,4 +267,6 @@ public class UserService {
             em.clear();
         }
     }
+
+   
 }

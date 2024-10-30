@@ -31,6 +31,12 @@ public class ImgFileService {
     @Value("${key.postImgUrl}")
     private String postImgUrl;
 
+    @Value("${key.bannerImgPath}")
+    private String bannerImgPath;
+
+    @Value("${key.bannerImgUrl}")
+    private String bannerImgUrl;
+
     public ImgFile save(ImgFile imgFile) {
         return imgFileRepository.save(imgFile);
     }
@@ -62,6 +68,44 @@ public class ImgFileService {
             }
 
             String filePath = postImgPath + fileName;
+            file.transferTo(new File(filePath));
+
+            imgFile.setOrigFileName(origFileName);
+            imgFile.setFilePath(filePath);
+            imgFile.setFileName(fileName);
+            imgFile.setUploadDate(dateTimeNow);
+            imgFile = save(imgFile);
+
+            return "http://localhost:8080/"+fileName;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("File saving failed", e);
+        }
+    }
+
+    public String saveBannerFile(MultipartFile file) {
+        LocalDateTime dateTimeNow = LocalDateTime.now();
+        ImgFile imgFile = new ImgFile();
+        String fileNameDateTime = dateTimeNow.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+
+        try {
+            String origFileName = file.getOriginalFilename();
+            String fileName = fileNameDateTime + origFileName;
+
+            if (!bannerImgPath.endsWith(File.separator)) {
+                bannerImgPath += File.separator;
+            }
+
+            File directory = new File(bannerImgPath);
+
+            if (!directory.exists()) {
+                boolean created = directory.mkdirs();  // Create the directory if it doesn't exist
+                if (!created) {
+                    throw new RuntimeException("Failed to create directory: " + bannerImgPath);
+                }
+            }
+
+            String filePath = bannerImgPath + fileName;
             file.transferTo(new File(filePath));
 
             imgFile.setOrigFileName(origFileName);

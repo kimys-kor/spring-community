@@ -7,13 +7,12 @@ import com.community.api.common.random.StringSecureRandom;
 import com.community.api.common.response.Response;
 import com.community.api.common.response.ResultCode;
 import com.community.api.common.security.PrincipalDetails;
+import com.community.api.model.Banner;
 import com.community.api.model.User;
-import com.community.api.model.base.UserRole;
 import com.community.api.model.base.UserStatus;
 import com.community.api.model.dto.*;
 import com.community.api.service.*;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +25,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -33,8 +33,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class GuestController {
 
-    @Value("${key.loginPoint}")
-    private String loginPoint;
     @Value("${key.signupPoint}")
     private String signupPoint;
     private final PostService postService;
@@ -46,6 +44,7 @@ public class GuestController {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
     private final JwtProperties jwtProperties;
+    private final BannerService bannerService;
 
     @GetMapping(value = "/test")
     public Response<Object> test() {
@@ -188,4 +187,15 @@ public class GuestController {
         ReadPostContentDto post = postService.getContent(username, boardId);
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, post);
     }
+
+    // 배너리스트
+    @GetMapping(value = "/bannerlist")
+    public Response<Object> bannerList(
+            Authentication authentication
+    ) {
+        List<Banner> allBanners = bannerService.getAllBanners();
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, allBanners);
+    }
+
+
 }

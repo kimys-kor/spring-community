@@ -325,4 +325,14 @@ public class UserController {
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, imgPaths);
     }
 
+    @PostMapping("/upload/banner")
+    public Response<Object> uploadBannerImages(@RequestParam("files") MultipartFile[] files) {
+        List<String> imgPaths = new ArrayList<>();
+        for (MultipartFile file : files) {
+            String imgPath = imgFileService.saveBannerFile(file);
+            imgPaths.add(imgPath);
+        }
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, imgPaths);
+    }
+
 }

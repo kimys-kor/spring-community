@@ -5,6 +5,8 @@ key:
   loginPoint: 10
   savePostPoint: 50
   saveCommentPoint: 20
+  bannerImgUrl: /C:/Users/demisoda/bannerImgPath
+  bannerImgPath: /C:/Users/demisoda/bannerImgPath
 
 spring:
   config:

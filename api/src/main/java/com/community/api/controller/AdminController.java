@@ -4,6 +4,7 @@ import com.community.api.common.response.Response;
 import com.community.api.common.response.ResultCode;
 import com.community.api.common.security.PrincipalDetails;
 import com.community.api.model.ApprovedIp;
+import com.community.api.model.Banner;
 import com.community.api.model.BlockedIp;
 import com.community.api.model.User;
 import com.community.api.model.base.UserRole;
@@ -29,6 +30,7 @@ public class AdminController {
     private final CommentService commentService;
     private final PointHistoryService pointHistoryService;
     private final AdminActionHistoryService adminActionHistoryService;
+    private final BannerService bannerService;
 
     @GetMapping(value = "/test")
     public Response<Object> test() {
@@ -229,4 +231,44 @@ public class AdminController {
 
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
+
+
+    // 배너 추가 (ActionType 13)
+    @PostMapping(value = "/saveBanner")
+    public Response<Object> saveBanner(
+        @RequestBody SaveBannerDto saveBannerDto,
+        Authentication authentication
+    ) {
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        String username = principalDetails.getUsername();
+        User user = userService.findByUsername(username);
+
+        Banner banner = bannerService.createBanner(saveBannerDto);
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
+            adminActionHistoryService.save(13, username);
+        }
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, banner);
+    }
+
+    // 배너 삭제 (ActionType 14)
+    @PutMapping(value = "/delete/bannerList")
+    public Response<Object> deleteBannerList(
+            @RequestBody DeletePostListDto dto,
+            Authentication authentication
+    ) {
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        String username = principalDetails.getUsername();
+        User user = userService.findByUsername(username);
+
+        for (Long id : dto.idList) {
+            bannerService.deleteBannerById(id);
+        }
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
+            adminActionHistoryService.save(14, username);
+        }
+
+        return new Response(ResultCode.DATA_NORMAL_PROCESSING);
+    }
+
+
 }

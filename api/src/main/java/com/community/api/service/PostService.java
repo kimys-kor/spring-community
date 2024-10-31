@@ -51,8 +51,8 @@ public class PostService {
                 return postCustomRepository.getNewList(pageable);
         }
 
-        public Page<ReadPartnerPostListDto> getPartnerList(int postType, Pageable pageable) {
-                return postCustomRepository.getPartnerList(postType, pageable);
+        public Page<ReadPartnerPostListDto> getPartnerList(String keyword, int postType, Pageable pageable) {
+                return postCustomRepository.getPartnerList(keyword, postType, pageable);
         }
 
         @Transactional

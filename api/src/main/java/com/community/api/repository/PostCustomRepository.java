@@ -139,7 +139,7 @@ public class PostCustomRepository {
         return new PageImpl<>(content, pageable, total);
     }
 
-    public Page<ReadPartnerPostListDto> getPartnerList(int postType, Pageable pageable) {
+    public Page<ReadPartnerPostListDto> getPartnerList(String keyword, int postType, Pageable pageable) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
         QueryResults<ReadPartnerPostListDto> results = queryFactory.select(Projections.fields(ReadPartnerPostListDto.class,
@@ -159,8 +159,9 @@ public class PostCustomRepository {
                 ))
                 .from(post)
                 .where(
-                        post.isDeleted.eq(false)
-                                .and(post.postType.eq(postType))
+                        post.isDeleted.eq(false),
+                        post.postType.eq(postType),
+                        keywordFilter(keyword)
                 )
                 .orderBy(post.createdDt.desc())
                 .offset(pageable.getOffset())
@@ -233,7 +234,7 @@ public class PostCustomRepository {
         if (StringUtils.isEmpty(keyword)) {
             return null;
         }
-        return post.title.contains(keyword).or(post.content.contains(keyword)).or(post.username.contains(keyword));
+        return post.title.contains(keyword).or(post.content.contains(keyword)).or(post.nickname.contains(keyword));
     }
 
 

@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -95,8 +94,8 @@ public class UserController {
     }
 
 
-    // 내정보 수정
-    @PatchMapping(value = "/update/myinfo")
+    // 내 정보 수정
+    @PutMapping(value = "/update/myinfo")
     public Response<Object> updateMyInfo(
             @RequestBody UserUpdateDto userUpdateDto,
             Authentication authentication
@@ -110,7 +109,7 @@ public class UserController {
     }
 
     // 내 비번 수정
-    @PatchMapping(value = "/update/mypw")
+    @PutMapping(value = "/update/mypw")
     public Response<Object> updateMyPW(
             @RequestBody UserPWUpdateDto userPWUpdateDto,
             Authentication authentication
@@ -125,13 +124,13 @@ public class UserController {
     // 회원 탈퇴
     @DeleteMapping(value = "/update/withdrawl")
     public Response<Object> updateWithdrawl(
-            @RequestBody Map<String, String> requestBody,
+            @RequestBody UserDeleteDto dto,
             Authentication authentication
     ) {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         String username = principalDetails.getUsername();
 
-        String password = requestBody.get("password");
+        String password = dto.getPassword();
         userService.updateWithdrawl(username, password);
 
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);

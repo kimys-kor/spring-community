@@ -155,9 +155,10 @@ public class GuestController {
     // 파트너 게시글 리스트
     @GetMapping(value = "/partnerList")
     public Response<Object> PartnerList(
+            String keyword,
             Pageable pageable
     ) {
-        Page<ReadPartnerPostListDto> list = postService.getPartnerList(1,pageable);
+        Page<ReadPartnerPostListDto> list = postService.getPartnerList(keyword,1,pageable);
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, list);
     }
 
@@ -165,9 +166,10 @@ public class GuestController {
     @GetMapping(value = "/photoList")
     public Response<Object> PhotoList(
             int postType,
+            String keyword,
             Pageable pageable
     ) {
-        Page<ReadPartnerPostListDto> list = postService.getPartnerList(postType, pageable);
+        Page<ReadPartnerPostListDto> list = postService.getPartnerList(keyword, postType, pageable);
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, list);
     }
 

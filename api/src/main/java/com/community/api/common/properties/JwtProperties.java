@@ -14,7 +14,7 @@ public record JwtProperties(
     public JwtProperties { // compact constructor
         // this -> null yet.
         if (expirationTime == null) {
-            expirationTime = 1_800_000L;
+            expirationTime = 7_200_000L;
         }
     }
 }

@@ -208,14 +208,13 @@ public class GuestController {
 
     // 배너 클릭
     @GetMapping(value = "/clickBanner")
-    public Response<Object> banner3List(
+    public Response<Object> clickBanner(
             @RequestParam(value = "bannerId") Long bannerId
     ) {
         if (bannerId != null) {
             bannerService.clickBanner(bannerId);
         }
-        List<Banner> threeBanners = bannerService.get3Banners();
-        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, threeBanners);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
 

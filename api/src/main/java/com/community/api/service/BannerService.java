@@ -1,6 +1,8 @@
 package com.community.api.service;
 
 import com.community.api.common.exception.AdminErrorCode;
+import com.community.api.common.exception.BannerErrorCode;
+import com.community.api.common.exception.BoardErrorCode;
 import com.community.api.model.Banner;
 import com.community.api.model.dto.SaveBannerDto;
 import com.community.api.model.dto.UpdateBannerDto;
@@ -37,7 +39,7 @@ public class BannerService {
 
     @Transactional
     public void updateBanner(UpdateBannerDto dto) {
-        Banner banner = bannerRepository.findById(dto.getId()).orElseThrow(AdminErrorCode.NO_EXIST_IP::defaultException);
+        Banner banner = bannerRepository.findById(dto.getId()).orElseThrow(BannerErrorCode.BANNER_NOT_EXIST::defaultException);
         imgFileService.deleteFile(banner.getThumbNail(), "banner");
 
         banner.setPartnerName(dto.getPartnerName());
@@ -52,7 +54,7 @@ public class BannerService {
     // 배너 클릭
     @Transactional
     public void clickBanner(Long bannerId) {
-        Banner banner = bannerRepository.findById(bannerId).orElseThrow(AdminErrorCode.NO_EXIST_IP::defaultException);
+        Banner banner = bannerRepository.findById(bannerId).orElseThrow(BannerErrorCode.BANNER_NOT_EXIST::defaultException);
         banner.setClickNum(banner.getClickNum()+1);
         em.flush();
         em.clear();

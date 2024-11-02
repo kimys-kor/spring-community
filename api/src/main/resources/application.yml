@@ -1,6 +1,6 @@
 key:
-  postImgUrl: /C:/Users/demisoda/imgPath
-  postImgPath: /C:/Users/demisoda/imgPath
+  postImgUrl: /C:/Users/demisoda/postImgPath
+  postImgPath: /C:/Users/demisoda/postImgPath
   signupPoint: 20
   loginPoint: 10
   savePostPoint: 50
@@ -52,7 +52,7 @@ spring:
 
   web:
     resources:
-      static-locations: file:///C:/Users/demisoda/imgPath/
+      static-locations: file:///C:/Users/demisoda/imgPath/, file:///C:/Users/demisoda/bannerImgPath/
 
 
 

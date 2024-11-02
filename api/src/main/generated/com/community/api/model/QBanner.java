@@ -19,11 +19,23 @@ public class QBanner extends EntityPathBase<Banner> {
 
     public static final QBanner banner = new QBanner("banner");
 
+    public final com.community.api.model.base.QBaseTime _super = new com.community.api.model.base.QBaseTime(this);
+
+    public final NumberPath<Integer> clickNum = createNumber("clickNum", Integer.class);
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdDt = _super.createdDt;
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath partnerName = createString("partnerName");
 
+    public final StringPath partnerUrl = createString("partnerUrl");
+
     public final StringPath thumbNail = createString("thumbNail");
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> updatedDt = _super.updatedDt;
 
     public QBanner(String variable) {
         super(Banner.class, forVariable(variable));

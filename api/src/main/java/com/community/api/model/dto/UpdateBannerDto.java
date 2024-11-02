@@ -4,8 +4,9 @@ import lombok.Data;
 
 
 @Data
-public class SaveBannerDto {
+public class UpdateBannerDto {
 
+    private Long Id;
     private String partnerName;
     // 썸네일url
     private String thumbNail;

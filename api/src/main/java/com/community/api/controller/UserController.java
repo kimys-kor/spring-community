@@ -57,9 +57,20 @@ public class UserController {
     @GetMapping(value = "/refresh")
     public Response<Object> refresh(
             HttpServletRequest request,
-            HttpServletResponse response,
-            @RequestHeader(value = "Authorization", required = false) String authorizationHeader
+            HttpServletResponse response
     ) {
+        System.out.println("토큰리프레쉬쉬쉬");
+        String accessToken = refreshTokenService.refresh(request);
+        response.addHeader(jwtProperties.headerString(), "Bearer " + accessToken);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
+    }
+
+    // 로그인한 유저 정보 가져오기
+    @GetMapping(value = "/myinfo")
+    public Response<Object> myinfo(
+            @RequestHeader(value = "Authorization") String authorizationHeader
+    ) {
+        System.out.println("유저정보리프레쉬쉬쉬");
         UserResponseDto userResponseDto = null;
         if (authorizationHeader != null) {
             String username = jwtTokenProvider.safeResolveToken(authorizationHeader);
@@ -68,8 +79,6 @@ public class UserController {
                 userResponseDto = new UserResponseDto(user);
             }
         }
-        String accessToken = refreshTokenService.refresh(request);
-        response.addHeader(jwtProperties.headerString(), "Bearer " + accessToken);
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, userResponseDto);
     }
 
@@ -320,6 +329,7 @@ public class UserController {
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
+    // 사진 업로드
     @PostMapping("/upload")
     public Response<Object> uploadImages(@RequestParam("files") MultipartFile[] files) {
         List<String> imgPaths = new ArrayList<>();
@@ -330,14 +340,6 @@ public class UserController {
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, imgPaths);
     }
 
-    @PostMapping("/upload/banner")
-    public Response<Object> uploadBannerImages(@RequestParam("files") MultipartFile[] files) {
-        List<String> imgPaths = new ArrayList<>();
-        for (MultipartFile file : files) {
-            String imgPath = imgFileService.saveBannerFile(file);
-            imgPaths.add(imgPath);
-        }
-        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, imgPaths);
-    }
+
 
 }

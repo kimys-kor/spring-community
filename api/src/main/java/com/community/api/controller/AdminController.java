@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -31,6 +32,8 @@ public class AdminController {
     private final PointHistoryService pointHistoryService;
     private final AdminActionHistoryService adminActionHistoryService;
     private final BannerService bannerService;
+    private final ImgFileService imgFileService;
+
 
     @GetMapping(value = "/test")
     public Response<Object> test() {
@@ -232,6 +235,17 @@ public class AdminController {
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
+    // 배너 이미지 업로드
+    @PostMapping("/upload/banner")
+    public Response<Object> uploadBannerImages(@RequestParam("files") MultipartFile[] files) {
+        List<String> imgPaths = new ArrayList<>();
+        for (MultipartFile file : files) {
+            String imgPath = imgFileService.saveBannerFile(file);
+            imgPaths.add(imgPath);
+        }
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, imgPaths);
+    }
+
 
     // 배너 추가 (ActionType 13)
     @PostMapping(value = "/saveBanner")
@@ -269,6 +283,28 @@ public class AdminController {
 
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
+
+    // 배너 수정 (ActionType 15)
+    @PostMapping(value = "/update/banner")
+    public Response<Object> updateBanner(
+            @RequestBody UpdateBannerDto dto,
+            Authentication authentication
+    ) {
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        String username = principalDetails.getUsername();
+        User user = userService.findByUsername(username);
+
+        bannerService.updateBanner(dto);
+
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
+            adminActionHistoryService.save(15, username);
+        }
+
+        return new Response(ResultCode.DATA_NORMAL_PROCESSING);
+    }
+
+
+
 
 
 }

@@ -10,14 +10,20 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class Banner {
+public class Banner extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String partnerName;
+    // 썸네일url
     @Column(unique = true)
     private String thumbNail;
+    // 파트너링크url
+    private String partnerUrl;
+
+
+    private int clickNum = 0;
 
 }

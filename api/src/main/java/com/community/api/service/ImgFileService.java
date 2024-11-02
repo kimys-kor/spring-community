@@ -11,15 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-
-@Slf4j
-@Service
-@Transactional
+@Slf4j@Service@Transactional
 @RequiredArgsConstructor
 public class ImgFileService {
 
@@ -76,7 +71,7 @@ public class ImgFileService {
             imgFile.setUploadDate(dateTimeNow);
             imgFile = save(imgFile);
 
-            return "http://localhost:8080/"+fileName;
+            return "http://localhost:8080/" + fileName;
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("File saving failed", e);
@@ -114,12 +109,42 @@ public class ImgFileService {
             imgFile.setUploadDate(dateTimeNow);
             imgFile = save(imgFile);
 
-            return "http://localhost:8080/"+fileName;
+            return "http://localhost:8080/" + fileName;
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("File saving failed", e);
         }
     }
 
+    public boolean deleteFile(String fileUrl, String type) {
+        // Extract the file name from the URL
+        String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
 
+        // Determine the base path based on the type
+        String basePath;
+        if ("post".equalsIgnoreCase(type)) {
+            basePath = postImgPath;
+        } else if ("banner".equalsIgnoreCase(type)) {
+            basePath = bannerImgPath;
+        } else {
+            throw new IllegalArgumentException("Invalid file type. Use 'post' or 'banner'.");
+        }
+
+        // Construct the full file path
+        File fileToDelete = new File(basePath + File.separator + fileName);
+
+        // Delete the file if it exists
+        if (fileToDelete.exists()) {
+            if (fileToDelete.delete()) {
+                log.info("File deleted successfully: " + fileToDelete.getAbsolutePath());
+                return true;
+            } else {
+                log.error("Failed to delete file: " + fileToDelete.getAbsolutePath());
+                return false;
+            }
+        } else {
+            log.warn("File not found: " + fileToDelete.getAbsolutePath());
+            return false;
+        }
+    }
 }

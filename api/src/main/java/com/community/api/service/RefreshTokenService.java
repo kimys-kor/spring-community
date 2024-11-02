@@ -44,7 +44,6 @@ public class RefreshTokenService {
         String username = tokenEntity.getUsername();
         Long userId = userRepository.findByUsername(username).orElseThrow(
                 AuthenticationErrorCode.AUTHENTICATION_FAILED::defaultException).getId();
-
         String accessToken = jwtTokenProvider.generateToken(userId, username);
 
         return accessToken;

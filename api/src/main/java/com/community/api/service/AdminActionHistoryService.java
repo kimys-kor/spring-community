@@ -57,7 +57,14 @@ public class AdminActionHistoryService {
                 content = "댓글 삭제";
                 break;
             case 13:
-                content = "유저 정보 수정";
+                content = "배너 추가";
+                break;
+            case 14:
+                content = "배너 삭제";
+                break;
+            case 15:
+                content = "배너 수정";
+                break;
             default:
                 content = "알 수 없는 작업";
         }

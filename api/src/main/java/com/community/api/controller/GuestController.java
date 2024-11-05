@@ -69,13 +69,6 @@ public class GuestController {
         User user = userService.findByUsername(username);
 
 
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime todayMidnight = now.toLocalDate().atStartOfDay();
-        if (user.getLastLogin() == null || user.getLastLogin().isBefore(todayMidnight)) {
-            userService.addPointExp(user.getId(), "login");
-            pointHistoryService.save(user.getUsername(), user.getNickname(), "login", null);
-        }
-
         if (!user.getStatus().equals(UserStatus.NORMAL)) {
             throw AuthenticationErrorCode.USER_NOT_EXIST.defaultException();
         }

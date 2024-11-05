@@ -57,8 +57,6 @@ public class PointHistoryService {
         switch (actionType) {
             case "signup":
                 return "회원 가입 축하";
-            case "login":
-                return "첫 로그인";
             case "savePost":
                 return "게시글 작성";
             case "saveComment":
@@ -71,8 +69,6 @@ public class PointHistoryService {
     private int getActionPoint(String actionType) {
         if ("signup".equals(actionType)) {
             return Integer.parseInt(signupPoint);
-        } else if ("login".equals(actionType)) {
-            return Integer.parseInt(loginPoint);
         } else if ("savePost".equals(actionType)) {
             return Integer.parseInt(savePostPoint);
         } else if ("saveComment".equals(actionType)) {

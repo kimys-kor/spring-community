@@ -1,13 +1,14 @@
 key:
-  postImgUrl: /C:/Users/demisoda/postImgPath
-  postImgPath: /C:/Users/demisoda/postImgPath
+  postImgUrl: /root/work-space/img/postImgPath
+  postImgPath: /root/work-space/img/postImgPath
+  bannerImgUrl: /root/work-space/img/bannerImgPath
+  bannerImgPath: /root/work-space/img/bannerImgPath
   signupPoint: 20
   loginPoint: 10
   savePostPoint: 50
   saveCommentPoint: 20
   savePromotionPoint: 30
-  bannerImgUrl: /C:/Users/demisoda/bannerImgPath
-  bannerImgPath: /C:/Users/demisoda/bannerImgPath
+
 
 spring:
   config:

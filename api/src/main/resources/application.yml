@@ -1,13 +1,14 @@
 key:
-  postImgUrl: /C:/Users/demisoda/postImgPath
-  postImgPath: /C:/Users/demisoda/postImgPath
+  postImgUrl: /root/work-space/img/postImgPath
+  postImgPath: /root/work-space/img/postImgPath
+  bannerImgUrl: /root/work-space/img/bannerImgPath
+  bannerImgPath: /root/work-space/img/bannerImgPath
   signupPoint: 20
   loginPoint: 10
   savePostPoint: 50
   saveCommentPoint: 20
   savePromotionPoint: 30
-  bannerImgUrl: /C:/Users/demisoda/bannerImgPath
-  bannerImgPath: /C:/Users/demisoda/bannerImgPath
+
 
 spring:
   config:
@@ -46,13 +47,13 @@ spring:
 
   servlet:
     multipart:
-      max-file-size: 200MB
+      max-file-size: 20MB
       enabled: true
-      max-request-size: 50MB
+      max-request-size: 20MB
 
   web:
     resources:
-      static-locations: file:///C:/Users/demisoda/postImgPath/, file:///C:/Users/demisoda/bannerImgPath/
+      static-locations: file:///root/work-space/img/postImgPath/, file:///root/work-space/img/bannerImgPath/
 
 
 
@@ -60,7 +61,9 @@ spring:
 server:
   servlet:
     encoding:
-      charset: utf-8
+      charset: UTF-8
+      enabled: true
+      force: true
 
 
 

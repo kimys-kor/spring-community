@@ -47,9 +47,11 @@ spring:
 
   servlet:
     multipart:
-      max-file-size: 200MB
+      max-file-size: 20MB
       enabled: true
-      max-request-size: 50MB
+      max-request-size: 20MB
+    encoding:
+      charset: UTF-8
 
   web:
     resources:

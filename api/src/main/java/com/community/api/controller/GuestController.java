@@ -84,6 +84,11 @@ public class GuestController {
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         response.addCookie(cookie);
+        response.addHeader("Set-Cookie", cookie.getName() + "=" + cookie.getValue()
+                + "; Max-Age=" + cookie.getMaxAge()
+                + "; Path=" + cookie.getPath()
+                + "; Domain=" + cookie.getDomain()
+                + "; HttpOnly; Secure; SameSite=None");
 
         UserResponseDto userResponseDto = new UserResponseDto(user);
         refreshTokenService.save(principalDetails.getUser().getUsername(), refreshToken);

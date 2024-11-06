@@ -53,7 +53,7 @@ spring:
 
   web:
     resources:
-      static-locations: file:///C:/Users/demisoda/postImgPath/, file:///C:/Users/demisoda/bannerImgPath/
+      static-locations: file:///root/work-space/img/postImgPath/, file:///root/work-space/img/bannerImgPath/
 
 
 

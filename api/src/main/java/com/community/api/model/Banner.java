@@ -24,6 +24,6 @@ public class Banner extends BaseTime {
     private String partnerUrl;
 
 
-    private int clickNum = 0;
+    private int clickNum;
 
 }

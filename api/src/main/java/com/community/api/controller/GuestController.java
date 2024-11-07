@@ -81,8 +81,8 @@ public class GuestController {
         cookie.setMaxAge(2_592_000); // 60 seconds × 60 minutes × 24 hours × 30 days
         cookie.setDomain("");
         cookie.setPath("/");
+        cookie.setSecure(false);
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);
         response.addCookie(cookie);
         response.addHeader("Set-Cookie", cookie.getName() + "=" + cookie.getValue()
                 + "; Max-Age=" + cookie.getMaxAge()

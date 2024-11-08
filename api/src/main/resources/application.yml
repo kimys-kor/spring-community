@@ -1,7 +1,7 @@
 key:
-  postImgUrl: /root/work-space/img/postImgPath
+  postImgUrl: https://ggongpang.com/postImg/
   postImgPath: /root/work-space/img/postImgPath
-  bannerImgUrl: /root/work-space/img/bannerImgPath
+  bannerImgUrl: https://ggongpang.com/bannerImg/
   bannerImgPath: /root/work-space/img/bannerImgPath
   signupPoint: 20
   loginPoint: 10

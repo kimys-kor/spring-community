@@ -71,7 +71,7 @@ public class ImgFileService {
             imgFile.setUploadDate(dateTimeNow);
             imgFile = save(imgFile);
 
-            return "http://localhost:8080/" + fileName;
+            return "https://ggongpang.com/postImg/" + fileName;
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("File saving failed", e);
@@ -109,7 +109,7 @@ public class ImgFileService {
             imgFile.setUploadDate(dateTimeNow);
             imgFile = save(imgFile);
 
-            return "http://localhost:8080/" + fileName;
+            return "https://ggongpang.com/bannerImg/" + fileName;
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("File saving failed", e);

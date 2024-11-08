@@ -3,6 +3,7 @@ package com.community.api.common.ipauthentication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -13,6 +14,13 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(adminPathIntercepter()).addPathPatterns("/admin/**");
         registry.addInterceptor(userPathIntercepter()).addPathPatterns("/user/**");
 //        registry.addInterceptor(guestPathIntercepter()).addPathPatterns("/guest/**");
+    }
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/postImg/**")
+                .addResourceLocations("file:///root/work-space/img/postImgPath/");
+        registry.addResourceHandler("/bannerImg/**")
+                .addResourceLocations("file:///root/work-space/img/bannerImgPath/");
     }
 
     @Bean

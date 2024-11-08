@@ -1,5 +1,6 @@
 package com.community.api.controller;
 
+import com.community.api.common.exception.BoardErrorCode;
 import com.community.api.common.jwt.JwtTokenProvider;
 import com.community.api.model.Comment;
 import com.community.api.model.Dm;
@@ -157,14 +158,21 @@ public class UserController {
         String username = principalDetails.getUsername();
         User user = userService.findByUsername(username);
 
+        // 포인트 체크
+        boolean isSpecialPostType = savePostDto.postType() == 16 || savePostDto.postType() == 17 || savePostDto.postType() == 18;
+        boolean hasEnoughPoints = user.getPoint() >= Integer.parseInt(savePostPoint);
+        if (isSpecialPostType && !hasEnoughPoints) {
+            throw BoardErrorCode.POINT_NOT_ENOUGH.defaultException();
+        }
 
         Post post = postService.savePost(request.getRemoteAddr(), username, savePostDto);
-
+        
+        // 포인트 추가
         if (savePostDto.postType() == 16 || savePostDto.postType() == 17 || savePostDto.postType() == 18) {
             userService.addPoint(user.getId(), -30);
             pointHistoryService.save(user.getUsername(), user.getNickname(), "savePromotion", post.getId());
         } else {
-            userService.addPointExp(user.getId(), "login");
+            userService.addPointExp(user.getId(), "savePost");
             pointHistoryService.save(user.getUsername(), user.getNickname(), "savePost", post.getId());
         }
 

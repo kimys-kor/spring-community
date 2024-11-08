@@ -15,6 +15,7 @@ public enum BoardErrorCode implements ErrorCode {
     POST_WRITER_NOT_EQUALS(HttpStatus.BAD_REQUEST, "게시글 작성자가 아닙니다."),
     COMMENT_ONLY_CAN_2STEP(HttpStatus.BAD_REQUEST, "대댓글 까지만 허용됩니다."),
     BAD_COMMENT_WRITE_REQUEST(HttpStatus.BAD_REQUEST, "올바르지 않은 대댓글 작성루트입니다"),
+    POINT_NOT_ENOUGH(HttpStatus.NOT_ACCEPTABLE, "포인트가 부족합니다"),
     ;
 
     public final HttpStatus status;

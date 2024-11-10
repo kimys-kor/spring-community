@@ -36,6 +36,10 @@ public class UserController {
     private String savePostPoint;
     @Value("${key.saveCommentPoint}")
     private String saveCommentPoint;
+    @Value("${key.saveCommentPoint}")
+    private String savePromotionPoint;
+
+
     private final RefreshTokenService refreshTokenService;
     private final PointHistoryService pointHistoryService;
     private final JwtProperties jwtProperties;

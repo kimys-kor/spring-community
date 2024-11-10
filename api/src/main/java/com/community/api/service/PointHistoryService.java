@@ -59,6 +59,8 @@ public class PointHistoryService {
                 return "회원 가입 축하";
             case "savePost":
                 return "게시글 작성";
+            case "savePromotion":
+                return "홍보글 작성";
             case "saveComment":
                 return "댓글 작성";
             default:
@@ -71,11 +73,11 @@ public class PointHistoryService {
             return Integer.parseInt(signupPoint);
         } else if ("savePost".equals(actionType)) {
             return Integer.parseInt(savePostPoint);
+        } else if ("savePromotion".equals(actionType)) {
+            return Integer.parseInt(savePromotionPoint);
         } else if ("saveComment".equals(actionType)) {
             return Integer.parseInt(saveCommentPoint);
-        } else if ("savePromotion".equals(actionType)) {
-            return -Integer.parseInt(savePromotionPoint);
-        }else {
+        } else {
             return 0;
         }
     }

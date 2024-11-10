@@ -103,8 +103,7 @@ public class GuestController {
 
         User user = userService.join(joinRequestDto);
         // 포인트 히스토리 저장
-        String pointContent = String.format("[%s]님 회원가입 + %s포인트", user.getNickname(), signupPoint);
-        pointHistoryService.save(user.getUsername(), user.getNickname(), pointContent, null);
+        pointHistoryService.save(user.getUsername(), user.getNickname(), "signup", null);
         return new Response(ResultCode.DATA_NORMAL_PROCESSING);
     }
 

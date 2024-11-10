@@ -7,7 +7,7 @@ key:
   loginPoint: 10
   savePostPoint: 50
   saveCommentPoint: 20
-  savePromotionPoint: 30
+  savePromotionPoint: -50
 
 
 spring:

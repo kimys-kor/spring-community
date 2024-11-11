@@ -41,6 +41,7 @@ public class PostCustomRepository {
                         post.title,
                         post.hit,
                         post.hate,
+                        post.thumbNail,
                         post.likes,
                         post.replyNum,
                         post.createdDt

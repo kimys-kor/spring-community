@@ -12,6 +12,7 @@ public class ReadPostListDto {
     private String nickname;
     private String userIp;
     private String title;
+    private String thumbNail;
     private int hit;
     private int hate;
     private int likes;

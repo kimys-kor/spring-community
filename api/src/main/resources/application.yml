@@ -45,7 +45,7 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
         jdbc:
-          time_zone: UTC
+          time_zone: Asia/Seoul
 
   servlet:
     multipart:

@@ -11,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 @Getter
@@ -27,5 +28,15 @@ public abstract class BaseTime {
     private LocalDateTime updatedDt;
 
 
+    @PrePersist
+    protected void onCreate() {
+        this.createdDt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        this.updatedDt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedDt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+    }
 
 }

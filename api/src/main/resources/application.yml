@@ -9,19 +9,15 @@ key:
   saveCommentPoint: 20
   savePromotionPoint: -50
 
-
 spring:
   config:
     import:
       - classpath:/app/security/security.yml
-
   profiles:
     active: prod
-
   mvc:
     converters:
-      preferred-jason-mapper: gson
-
+      preferred-json-mapper: gson
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/community?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
@@ -32,7 +28,6 @@ spring:
       minimum-idle: 5
       maxLifetime: 10000
       leak-detection-threshold: 2000
-
   jpa:
     generate-ddl: true
     hibernate:
@@ -44,26 +39,22 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
-
-  servlet:
-    multipart:
-      max-file-size: 20MB
-      enabled: true
-      max-request-size: 20MB
-
-  web:
-    resources:
-      static-locations: file:///root/work-space/img/postImgPath/, file:///root/work-space/img/bannerImgPath/
-
-
-
-
-server:
+  jackson:
+    time-zone: Asia/Seoul  # Ensures JSON serialization uses KST
   servlet:
     encoding:
       charset: UTF-8
       enabled: true
       force: true
+    multipart:
+      max-file-size: 20MB
+      enabled: true
+      max-request-size: 20MB
+  web:
+    resources:
+      static-locations:
+        - file:///root/work-space/img/postImgPath/
+        - file:///root/work-space/img/bannerImgPath/
 
-
-
+server:
+  timezone: Asia/Seou

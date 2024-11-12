@@ -6,6 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
+import java.util.TimeZone;
+
 @SpringBootApplication(scanBasePackages = "com.community.api")
 @ConfigurationPropertiesScan(basePackages = "com.community")
 @EnableAspectJAutoProxy
@@ -13,6 +15,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class ApiApplication {
 
 	public static void main(String[] args) {
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
 		SpringApplication.run(ApiApplication.class, args);
 	}
 

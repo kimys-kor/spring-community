@@ -35,6 +35,7 @@ public class PostCustomRepository {
 
         QueryResults<ReadPostListDto> results = queryFactory.select(Projections.fields(ReadPostListDto.class,
                         post.id,
+                        post.postType,
                         post.username,
                         post.nickname,
                         post.userIp,

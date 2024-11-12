@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Data
 public class ReadPostListDto {
     private Long id;
+    private int postType;
     private String username;
     private String nickname;
     private String userIp;

@@ -64,6 +64,39 @@ public class PostCustomRepository {
         return new PageImpl<>(content, pageable, total);
     }
 
+    public Page<ReadBestPostListDto> getBetweenList(List<Integer> typeList, Pageable pageable) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
+        QueryResults<ReadBestPostListDto> results = queryFactory.select(
+                        Projections.fields(ReadBestPostListDto.class,
+                                post.id,
+                                post.postType,
+                                post.username,
+                                post.nickname,
+                                post.userIp,
+                                post.title,
+                                post.hit,
+                                post.hate,
+                                post.likes,
+                                post.replyNum,
+                                post.createdDt
+                        ))
+                .from(post)
+                .where(
+                        post.isDeleted.eq(false)
+                                .and(post.postType.in(typeList))
+                )
+                .orderBy(post.hit.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+        List<ReadBestPostListDto> content = results.getResults();
+        long total = results.getTotal();
+
+        return new PageImpl<>(content, pageable, total);
+    }
+
     public Page<ReadBestPostListDto> getBestList(String period, Pageable pageable) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
         LocalDateTime timeThreshold;

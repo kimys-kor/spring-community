@@ -143,9 +143,10 @@ public class GuestController {
     // 최근 게시글 리스트
     @GetMapping(value = "/newList")
     public Response<Object> NewBoardList(
+            @RequestParam List<Integer> typeList,
             Pageable pageable
     ) {
-        Page<ReadBestPostListDto> list = postService.getNewList(pageable);
+        Page<ReadBestPostListDto> list = postService.getNewList(typeList, pageable);
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, list);
     }
 

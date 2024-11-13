@@ -47,8 +47,8 @@ public class PostService {
                 return postCustomRepository.getBestList(period, pageable);
         }
 
-        public Page<ReadBestPostListDto> getNewList(Pageable pageable) {
-                return postCustomRepository.getNewList(pageable);
+        public Page<ReadBestPostListDto> getNewList(List<Integer> typeList, Pageable pageable) {
+                return postCustomRepository.getBetweenList(typeList, pageable);
         }
 
         public Page<ReadPartnerPostListDto> getPartnerList(String keyword, int postType, Pageable pageable) {

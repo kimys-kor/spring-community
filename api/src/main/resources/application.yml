@@ -9,6 +9,7 @@ key:
   saveCommentPoint: 20
   savePromotionPoint: -50
 
+
 spring:
   config:
     import:
@@ -65,3 +66,6 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+
+
+

@@ -86,7 +86,7 @@ public class PostCustomRepository {
                         post.isDeleted.eq(false)
                                 .and(post.postType.in(typeList))
                 )
-                .orderBy(post.hit.desc())
+                .orderBy(post.createdDt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();

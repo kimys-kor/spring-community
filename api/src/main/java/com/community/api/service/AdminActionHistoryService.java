@@ -65,6 +65,15 @@ public class AdminActionHistoryService {
             case 15:
                 content = "배너 수정";
                 break;
+            case 16:
+                content = "먹튀 신고 작성";
+                break;
+            case 17:
+                content = "먹튀 신고 수정";
+                break;
+            case 18:
+                content = "먹튀 신고 삭제";
+                break;
             default:
                 content = "알 수 없는 작업";
         }

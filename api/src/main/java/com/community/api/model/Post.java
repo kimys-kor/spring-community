@@ -24,7 +24,7 @@ public class Post extends BaseTime {
     //    9.안구정화 10.유머이슈 11.나는분석왕 12.자유게시판 13.피해사례
     //    14.이벤트 15.포인트교환신청
     //    16.일반홍보 17.꽁머니홍보 18.구인구직
-    //    19.공지사항 20.1:1문의
+    //    19.공지사항 20.1:1문의 21: 먹튀사이트
     private int postType;
     private boolean notification;
     private String username;

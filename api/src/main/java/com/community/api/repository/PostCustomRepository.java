@@ -1,10 +1,7 @@
 package com.community.api.repository;
 
 
-import com.community.api.model.dto.ReadBestPostListDto;
-import com.community.api.model.dto.ReadPartnerPostListDto;
-import com.community.api.model.dto.ReadPostContentDto;
-import com.community.api.model.dto.ReadPostListDto;
+import com.community.api.model.dto.*;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -21,6 +18,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.community.api.model.QPost.post;
+import static com.community.api.model.QReportInformation.reportInformation;
+
 
 @Repository
 public class PostCustomRepository {
@@ -63,6 +62,52 @@ public class PostCustomRepository {
 
         return new PageImpl<>(content, pageable, total);
     }
+
+    public Page<ReadReportListDto> getReportList(int typ, String keyword, Integer reportTyp, Pageable pageable) {
+
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
+
+        // QueryDSL을 사용한 JPQL
+        QueryResults<ReadReportListDto> results = queryFactory.select(Projections.fields(ReadReportListDto.class,
+                        post.id,
+                        post.postType,
+                        post.username,
+                        post.nickname,
+                        post.userIp,
+                        post.title,
+                        post.thumbNail,
+                        post.hit,
+                        post.hate,
+                        post.likes,
+                        post.replyNum,
+                        post.createdDt,
+                        reportInformation.reportTyp,
+                        reportInformation.siteName,
+                        reportInformation.siteUrl,
+                        reportInformation.date,
+                        reportInformation.amount,
+                        reportInformation.accountNumber
+                ))
+                .from(post)
+                .leftJoin(reportInformation).on(reportInformation.postId.eq(post.id))
+                .where(
+                        post.postType.eq(typ),
+                        post.isDeleted.eq(false),
+                        keywordFilter(keyword),
+                        reportTypFilter(reportTyp)
+                )
+                .orderBy(post.createdDt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+        List<ReadReportListDto> content = results.getResults();
+        long total = results.getTotal();
+
+        return new PageImpl<>(content, pageable, total);
+    }
+
 
     public Page<ReadBestPostListDto> getBetweenList(List<Integer> typeList, Pageable pageable) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
@@ -272,5 +317,45 @@ public class PostCustomRepository {
         return post.title.contains(keyword).or(post.content.contains(keyword)).or(post.nickname.contains(keyword));
     }
 
+    private BooleanExpression reportTypFilter(Integer reportTyp) {
+        if (reportTyp == null || reportTyp == 0) {
+            return null; // reportTyp이 0 또는 null일 경우 모든 타입을 가져옴
+        }
+        return reportInformation.reportTyp.eq(reportTyp); // 특정 reportTyp을 필터링
+    }
+
+
+    public ReadReportContentDto getReportContent(Long boardId) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
+        ReadReportContentDto readReportContentDto = queryFactory.select(Projections.fields(ReadReportContentDto.class,
+                        post.id,
+                        post.username,
+                        post.nickname,
+                        post.userIp,
+                        post.title,
+                        post.content,
+                        post.hit,
+                        post.hate,
+                        post.likes,
+                        post.replyNum,
+                        post.createdDt,
+                        reportInformation.reportTyp,
+                        reportInformation.siteName,
+                        reportInformation.siteUrl,
+                        reportInformation.date,
+                        reportInformation.amount,
+                        reportInformation.accountNumber
+                ))
+                .from(post)
+                .leftJoin(reportInformation).on(reportInformation.postId.eq(post.id))
+                .where(
+                        post.id.eq(boardId),
+                        post.isDeleted.eq(false)
+                )
+                .fetchOne();
+
+        return readReportContentDto;
+    }
 
 }

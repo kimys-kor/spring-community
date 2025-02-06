@@ -130,6 +130,35 @@ public class GuestController {
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, list);
     }
 
+    // 먹튀신고 리스트
+    @GetMapping(value = "/list/report-post")
+    public Response<Object> ReportList(
+            int typ,
+            String keyword,
+            Integer reportTyp,
+            Pageable pageable
+    ) {
+        Page<ReadReportListDto> list = postService.getReportList(typ, keyword, reportTyp, pageable);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, list);
+    }
+
+
+    // 먹튀신고 상세
+    @GetMapping(value = "/content/report-post")
+    public Response<Object> ReportContent(
+            Long boardId,
+            Authentication authentication
+    ) {
+        String username = null;
+        if (authentication != null) {
+            PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+            username = principalDetailis.getUsername();
+        }
+
+        ReadReportContentDto post = postService.getReportContent(username, boardId);
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING, post);
+    }
+
     // 베스트 게시글 리스트
     @GetMapping(value = "/bestList")
     public Response<Object> BestBoardList(

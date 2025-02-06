@@ -2,29 +2,24 @@ package com.community.api.service;
 
 import com.community.api.common.exception.AuthenticationErrorCode;
 import com.community.api.common.exception.BoardErrorCode;
-import com.community.api.common.exception.CommentErrorCode;
-import com.community.api.model.ImgFile;
-import com.community.api.model.LikePost;
-import com.community.api.model.Post;
-import com.community.api.model.User;
+
+import com.community.api.model.*;
 import com.community.api.model.base.UserRole;
 import com.community.api.model.dto.*;
 import com.community.api.repository.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.AuthenticationException;
+
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
+
 import java.util.List;
 import java.util.Optional;
 
@@ -38,9 +33,14 @@ public class PostService {
         private final PostRepository postRepository;
         private final UserRepository userRepository;
         private final LikePostRepository likePostRepository;
+        private final ReportInformationRepository reportInformationRepository;
 
         public Page<ReadPostListDto> getList(int typ, String keyword, Pageable pageable) {
                 return postCustomRepository.getList(typ, keyword, pageable);
+        }
+
+        public Page<ReadReportListDto> getReportList(int typ, String keyword, Integer reportTyp, Pageable pageable) {
+                return postCustomRepository.getReportList(typ, keyword, reportTyp, pageable);
         }
 
         public Page<ReadBestPostListDto> getBestList(String period, Pageable pageable) {
@@ -59,8 +59,6 @@ public class PostService {
         public ReadPostContentDto getContent(String username, Long id) {
                 Post post = postRepository.findById(id).orElseThrow(BoardErrorCode.POST_NOT_EXIST::defaultException);
                 post.setHit(post.getHit()+1);
-                em.flush();
-                em.clear();
                 return mapToDTO(username, post);
         }
 
@@ -115,6 +113,84 @@ public class PostService {
         }
 
         @Transactional
+        public ReadReportContentDto getReportContent(String username, Long boardId) {
+                Post post = postRepository.findById(boardId).orElseThrow(BoardErrorCode.POST_NOT_EXIST::defaultException);
+                post.setHit(post.getHit()+1);
+
+                return postCustomRepository.getReportContent(boardId);
+        }
+
+        public void saveReport(String userIp, String username, SaveReportPostDto saveReportPostDto) {
+                User user = userRepository.findByUsername(username).orElseThrow(AuthenticationErrorCode.USER_NOT_EXIST::defaultException);
+                Post post = Post.builder()
+                        .postType(saveReportPostDto.postType())
+                        .notification(false)
+                        .username(username)
+                        .nickname(user.getNickname())
+                        .userIp(userIp)
+                        .thumbNail(saveReportPostDto.thumbNail())
+                        .title(saveReportPostDto.title())
+                        .content(saveReportPostDto.content())
+                        .hit(1)
+                        .hate(0)
+                        .likes(0)
+                        .isDeleted(false)
+                        .replyNum(0)
+                        .build();
+                Post savePost = postRepository.save(post);
+
+                ReportInformation reportInformation = ReportInformation.builder()
+                        .postId(savePost.getId())
+                        .reportTyp(saveReportPostDto.reportTyp())
+                        .siteName(saveReportPostDto.siteName())
+                        .siteUrl(saveReportPostDto.siteUrl())
+                        .date(saveReportPostDto.date())
+                        .amount(saveReportPostDto.amount())
+                        .accountNumber(saveReportPostDto.accountNumber())
+                        .build();
+                reportInformationRepository.save(reportInformation);
+
+        }
+
+        @Transactional
+        public void updateReport(String username, UpdateReportDto updateReportDto) {
+                Post post = postRepository.findById(updateReportDto.postId()).orElseThrow(
+                        BoardErrorCode.POST_NOT_EXIST::defaultException);
+
+                ReportInformation reportInformation = reportInformationRepository.findByPostId(updateReportDto.postId()).orElseThrow();
+
+                User user = userRepository.findByUsername(username).orElseThrow(AuthenticationErrorCode.USER_NOT_EXIST::defaultException);
+
+                if (!post.getUsername().equals(username) && user.getRole().equals(UserRole.ROLE_USER)) {
+                        throw BoardErrorCode.POST_WRITER_NOT_EQUALS.defaultException();
+                }
+
+                post.setThumbNail(updateReportDto.thumbNail());
+                post.setTitle(updateReportDto.title());
+                post.setContent(updateReportDto.content());
+
+                reportInformation.setReportTyp(updateReportDto.reportTyp());
+                reportInformation.setSiteName(updateReportDto.siteName());
+                reportInformation.setSiteUrl(updateReportDto.siteUrl());
+                reportInformation.setDate(updateReportDto.date());
+                reportInformation.setAmount(updateReportDto.amount());
+                reportInformation.setAccountNumber(updateReportDto.accountNumber());
+                em.flush();
+                em.clear();
+        }
+
+        public void deleteReport(String username, Long postId) {
+                Post post = postRepository.findById(postId).orElseThrow(BoardErrorCode.POST_NOT_EXIST::defaultException);
+                User user = userRepository.findByUsername(username).orElseThrow(AuthenticationErrorCode.USER_NOT_EXIST::defaultException);
+
+                if (!post.getUsername().equals(username) && user.getRole().equals(UserRole.ROLE_USER)) {
+                        throw BoardErrorCode.POST_WRITER_NOT_EQUALS.defaultException();
+                }
+                postRepository.delete(post);
+                reportInformationRepository.deleteByPostId(postId);
+        }
+
+        @Transactional
         public void updatePost(String username, UpdatePostDto updatePostDto) {
                 Post post = postRepository.findById(updatePostDto.postId()).orElseThrow(
                         BoardErrorCode.POST_NOT_EXIST::defaultException);
@@ -157,4 +233,7 @@ public class PostService {
                 post.setPostType(postType);
                 postRepository.save(post);
         }
+
+
+
 }

@@ -188,6 +188,62 @@ public class UserController {
         return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
     }
 
+    // 먹튀신고 쓰기
+    @PostMapping(value = "/save/report-post")
+    public Response<Object> saveReportPost(
+            @RequestBody @Valid SaveReportPostDto saveReportPostDto,
+            HttpServletRequest request,
+            Authentication authentication
+    ) {
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        String username = principalDetails.getUsername();
+        User user = userService.findByUsername(username);
+        postService.saveReport(request.getRemoteAddr(), username, saveReportPostDto);
+
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
+            adminActionHistoryService.save(16, user.getUsername());
+        }
+
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
+    }
+
+    // 먹튀신고 수정
+    @PatchMapping(value = "/update/report-post")
+    public Response<Object> updateReport(
+            @RequestBody @Valid UpdateReportDto updateReportDto,
+            Authentication authentication
+    ) {
+        PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+        String username = principalDetailis.getUsername();
+        User user = userService.findByUsername(username);
+
+        postService.updateReport(username, updateReportDto);
+        // 어드민일경우 로그 저장
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
+            adminActionHistoryService.save(17, user.getUsername());
+        }
+
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
+    }
+
+    // 먹튀신고 삭제
+    @DeleteMapping(value = "/report/{postId}")
+    public Response<Object> deleteReport(
+            @PathVariable Long postId,
+            Authentication authentication
+    ) {
+        PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+        String username = principalDetailis.getUsername();
+        User user = userService.findByUsername(username);
+
+        postService.deleteReport(username, postId);
+        // 어드민일경우 로그 저장
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
+            adminActionHistoryService.save(18, user.getUsername());
+        }
+        return new Response<>(ResultCode.DATA_NORMAL_PROCESSING);
+    }
+
     // 게시글 수정
     @PatchMapping(value = "/update/post")
     public Response<Object> updatePost(

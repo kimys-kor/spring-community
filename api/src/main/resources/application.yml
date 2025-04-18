@@ -1,8 +1,8 @@
 key:
   postImgUrl: https://ggongpang.com/postImg/
-  postImgPath: /root/work-space/img/postImgPath
+  postImgPath: /var/www/ggongpang.com/postImg/
   bannerImgUrl: https://ggongpang.com/bannerImg/
-  bannerImgPath: /root/work-space/img/bannerImgPath
+  bannerImgPath: /var/www/ggongpang.com/bannerImg/
   signupPoint: 20
   loginPoint: 10
   savePostPoint: 50
@@ -55,7 +55,7 @@ spring:
 
   web:
     resources:
-      static-locations: file:///root/work-space/img/postImgPath/, file:///root/work-space/img/bannerImgPath/
+      static-locations: file:///var/www/ggongpang.com/postImg/, file:///var/www/ggongpang.com/bannerImg/
 
 
 
